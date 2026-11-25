@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BartaGuard</string>
+    <string name="share_label">Check with BartaGuard</string>
+    <string name="watch_label">BartaGuard scam warnings</string>
+</resources>

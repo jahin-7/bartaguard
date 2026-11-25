@@ -1,0 +1,80 @@
+{
+ "rows": 10283,
+ "labels": {
+  "HAM": 3904,
+  "PROMO": 3695,
+  "SPAM": 2684
+ },
+ "label_by_source": {
+  "SMS": {
+   "HAM": 3723,
+   "PROMO": 3681,
+   "SPAM": 280
+  },
+  "Telegram": {
+   "HAM": 181,
+   "PROMO": 14,
+   "SPAM": 2404
+  }
+ },
+ "label_by_annotation": {
+  "ANNOTATOR-REVIEWED": {
+   "HAM": 3581,
+   "PROMO": 3456,
+   "SPAM": 2250
+  },
+  "MANUAL": {
+   "HAM": 323,
+   "PROMO": 239,
+   "SPAM": 434
+  }
+ },
+ "groups": 4482,
+ "rows_in_multi_member_groups": 6667,
+ "groups_with_conflicting_labels": 71,
+ "groups_split_across_splits": 0,
+ "split_sizes": {
+  "train": 8754,
+  "val": 778,
+  "test": 751
+ },
+ "split_label_source": {
+  "test": {
+   "SMS": {
+    "HAM": 144,
+    "PROMO": 285,
+    "SPAM": 39
+   },
+   "Telegram": {
+    "HAM": 19,
+    "PROMO": 2,
+    "SPAM": 262
+   }
+  },
+  "train": {
+   "SMS": {
+    "HAM": 3331,
+    "PROMO": 3171,
+    "SPAM": 217
+   },
+   "Telegram": {
+    "HAM": 143,
+    "PROMO": 12,
+    "SPAM": 1880
+   }
+  },
+  "val": {
+   "SMS": {
+    "HAM": 248,
+    "PROMO": 225,
+    "SPAM": 24
+   },
+   "Telegram": {
+    "HAM": 19,
+    "PROMO": 0,
+    "SPAM": 262
+   }
+  }
+ },
+ "near_dup_similarity_threshold": 0.85
+}

@@ -1,0 +1,173 @@
+{
+ "rules": [
+  {
+   "key": "credential_request",
+   "severity": 3,
+   "en": "Asks for an OTP, PIN, password or verification code. No bank, MFS or company needs these.",
+   "bn": "OTP, পিন, পাসওয়ার্ড বা ভেরিফিকেশন কোড চাইছে। কোনো ব্যাংক, MFS বা প্রতিষ্ঠান এগুলো চায় না।",
+   "patterns": [
+    "\\b(otp|o\\.t\\.p|pin|password|passcode|verification code|cvv)\\b",
+    "(ওটিপি|পিন নম্বর|পিন কোড|গোপন পিন|পাসওয়ার্ড|ভেরিফিকেশন কোড|কোডটি দিন|কোড দিন|কোডটি বলুন|সিভিভি)",
+    "(পিন|pin)\\s*(\\S+\\s*){0,3}(দিয়ে|দিন|বলুন|বলেন|পাঠান|din|bolun|bolen)",
+    "\\b(otp|pin|code)\\s*(ta|ti|ti\\s*din|din|bolen|bolun|pathan|share)\\b"
+   ]
+  },
+  {
+   "key": "account_threat",
+   "severity": 3,
+   "en": "Claims your account will be blocked, suspended or closed. A classic pressure tactic.",
+   "bn": "আপনার অ্যাকাউন্ট বন্ধ/ব্লক হবে বলে ভয় দেখাচ্ছে, এটি একটি পরিচিত চাপ সৃষ্টির কৌশল।",
+   "patterns": [
+    "(account|acc)\\s*(will be\\s*)?(blocked|suspended|closed|locked|deactivated)",
+    "(অ্যাকাউন্ট|একাউন্ট|অ্যাকাউন্টটি|একাউন্টটি)\\s*(\\S+\\s*){0,3}(বন্ধ|ব্লক|স্থগিত|লক)",
+    "(account|acc|একাউন্ট)\\s*(bondho|block|lock)\\s*(hoye|hobe|kora)"
+   ]
+  },
+  {
+   "key": "advance_payment",
+   "severity": 3,
+   "en": "Asks you to pay or send money first (fee, deposit, registration, processing) to receive a job, prize or refund.",
+   "bn": "চাকরি, পুরস্কার বা রিফান্ড পেতে আগে টাকা/ফি/জামানত পাঠাতে বলছে।",
+   "patterns": [
+    "(registration|processing|delivery|security)\\s*(fee|charge|deposit)",
+    "(রেজিস্ট্রেশন|রেজিষ্ট্রেশন|প্রসেসিং|ডেলিভারি|জামানত|অগ্রিম)\\s*(ফি|চার্জ|টাকা)?",
+    "(send|pathan|pathiye|পাঠান|পাঠিয়ে|সেন্ড)\\s*(\\S+\\s*){0,3}(taka|tk|টাকা)",
+    "(টাকা|taka)\\s*(\\S+\\s*){0,2}(পাঠান|পাঠিয়ে দিন|send kor|pathan)"
+   ]
+  },
+  {
+   "key": "wrong_transfer_refund",
+   "severity": 3,
+   "en": "Says money was sent to you by mistake and asks you to send it back. Check your own balance in the official app first; this is a common scam.",
+   "bn": "ভুল করে টাকা পাঠানো হয়েছে বলে ফেরত চাইছে। আগে অফিসিয়াল অ্যাপে নিজের ব্যালেন্স দেখুন; এটি একটি প্রচলিত প্রতারণা।",
+   "patterns": [
+    "ভুল\\s*(করে|বশত)\\s*(\\S+\\s*){0,6}(পাঠিয়েছি|চলে গেছে|গেছে|এসেছে)",
+    "(ফেরত|ferot|ferat|return)\\s*(\\S+\\s*){0,2}(দিন|পাঠান|din|pathan|diben|koren)",
+    "\\b(vul|bhul)\\s*(kore|e)\\s*(\\S+\\s*){0,5}(chole geche|pathiyechi|pathaisi|geche)",
+    "\\b(sent|transferred)\\s*(\\S+\\s*){0,3}by mistake"
+   ]
+  },
+  {
+   "key": "prize_lottery",
+   "severity": 2,
+   "en": "Says you have won a prize, lottery or reward you did not enter for.",
+   "bn": "আপনি পুরস্কার/লটারি জিতেছেন বলছে, যেটিতে আপনি অংশ নেননি।",
+   "patterns": [
+    "\\b(you (have )?won|winner|congratulations|lottery|jackpot|prize|reward)\\b",
+    "(অভিনন্দন|বিজয়ী|জিতেছেন|লটারি|পুরস্কার|পুরষ্কার|উপহার জিতে)",
+    "\\b(jitechen|bijoyi|lottery jitechen|puroskar)\\b"
+   ]
+  },
+  {
+   "key": "easy_income",
+   "severity": 2,
+   "en": "Promises easy or guaranteed income, daily earnings or work-from-home money.",
+   "bn": "সহজ বা নিশ্চিত আয়, দৈনিক ইনকাম বা ঘরে বসে টাকা আয়ের প্রতিশ্রুতি দিচ্ছে।",
+   "patterns": [
+    "\\b(earn|income|profit)\\b\\s*(\\S+\\s*){0,3}(daily|per day|guaranteed|from home)",
+    "(ঘরে বসে|দৈনিক|প্রতিদিন|নিশ্চিত)\\s*(\\S+\\s*){0,3}(আয়|ইনকাম|ইনকাম করুন|টাকা আয়)",
+    "(ইনকাম|income)\\s*(\\S+\\s*){0,3}(করুন|korun|kora jay|করা যায়)",
+    "\\b(ghore bose|ghore boshe)\\b"
+   ]
+  },
+  {
+   "key": "gambling",
+   "severity": 2,
+   "en": "Mentions betting, casino or gambling. Common in scam and fraud campaigns.",
+   "bn": "বেটিং, ক্যাসিনো বা জুয়ার কথা বলছে, যা প্রতারণামূলক প্রচারণায় প্রচলিত।",
+   "patterns": [
+    "\\b(bet|betting|casino|1xbet|jackpot|spin|slot|aviator|crazy time)\\b",
+    "(বেটিং|বাজি|ক্যাসিনো|জুয়া|স্লট|স্পিন)"
+   ]
+  },
+  {
+   "key": "urgency",
+   "severity": 1,
+   "en": "Creates urgency (\"now\", \"within 24 hours\", \"last chance\"). Slow down and verify.",
+   "bn": "তাড়াহুড়ো তৈরি করছে (\"এখনই\", \"২৪ ঘণ্টার মধ্যে\", \"শেষ সুযোগ\")। ধীরে যাচাই করুন।",
+   "patterns": [
+    "\\b(urgent|immediately|right now|last chance|within \\d+ (hours?|minutes?)|expires? today)\\b",
+    "(জরুরি|অবিলম্বে|শেষ সুযোগ|\\d+\\s*ঘণ্টার মধ্যে|এখনই\\s*(\\S+\\s*){0,2}(না হলে|নইলে))",
+    "\\b(ekhoni|joruri|druto)\\b"
+   ]
+  },
+  {
+   "key": "impersonation",
+   "severity": 1,
+   "en": "Uses the name of a bank, mobile financial service, telecom or government office. Check it through official channels.",
+   "bn": "ব্যাংক, মোবাইল ব্যাংকিং, টেলিকম বা সরকারি দপ্তরের নাম ব্যবহার করছে। অফিসিয়াল মাধ্যমে যাচাই করুন।",
+   "patterns": [
+    "\\b(bkash|b-kash|nagad|rocket|upay|bank|police|govt|government|bangladesh bank)\\b",
+    "(বিকাশ|নগদ|রকেট|উপায়|ব্যাংক|পুলিশ|সরকার|বাংলাদেশ ব্যাংক)"
+   ]
+  },
+  {
+   "key": "callback_number",
+   "severity": 1,
+   "en": "Asks you to call or message a number given in the message. Use the official number instead.",
+   "bn": "মেসেজে দেওয়া নম্বরে কল/মেসেজ করতে বলছে। বরং অফিসিয়াল নম্বর ব্যবহার করুন।",
+   "patterns": [
+    "(call|whatsapp|imo|telegram|contact)\\s*(\\S+\\s*){0,2}(0|\\+?880)1[3-9]\\d",
+    "(কল করুন|যোগাযোগ করুন|হোয়াটসঅ্যাপ|ইমো)\\s*(\\S+\\s*){0,2}(0|\\+?880|০|৮৮০)(1|১)"
+   ]
+  }
+ ],
+ "dont_share_patterns": [
+  "(do not|don't|never)\\s+(share|tell|give)",
+  "(কাউকে|কারো সাথে|কারও সাথে)\\s*(\\S+\\s*){0,3}(শেয়ার|দিবেন না|বলবেন না|জানাবেন না)",
+  "(share|kauke)\\s*(\\S+\\s*){0,2}(korben na|diben na|bolben na)"
+ ],
+ "shorteners": [
+  "bit.ly",
+  "bitly.com",
+  "cutt.ly",
+  "goo.gl",
+  "is.gd",
+  "ow.ly",
+  "rb.gy",
+  "rebrand.ly",
+  "s.id",
+  "shorturl.at",
+  "t.co",
+  "t.ly",
+  "tiny.cc",
+  "tinyurl.com",
+  "v.gd"
+ ],
+ "risky_tlds": [
+  "bet",
+  "buzz",
+  "cfd",
+  "click",
+  "icu",
+  "live",
+  "monster",
+  "rest",
+  "sbs",
+  "top",
+  "vip",
+  "win",
+  "xyz"
+ ],
+ "brands": {
+  "bkash": [
+   "bkash.com"
+  ],
+  "nagad": [
+   "nagad.com.bd"
+  ],
+  "rocket": [
+   "dutchbanglabank.com"
+  ],
+  "grameenphone": [
+   "grameenphone.com"
+  ],
+  "robi": [
+   "robi.com.bd"
+  ],
+  "banglalink": [
+   "banglalink.net"
+  ]
+ },
+ "url_pattern": "(https?://[^\\s<>\\\"']+|www\\.[^\\s<>\\\"']+|\\b[a-z0-9-]+(\\.[a-z0-9-]+)*\\.(com|net|org|xyz|top|click|link|info|bd|me|io|ly|gl|co|cc|gd|at|live|win|bet|vip|buzz|icu|site|online|shop)(/[^\\s<>\\\"']*)?)"
+}

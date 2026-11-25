@@ -1,0 +1,849 @@
+{
+ "overall": [
+  {
+   "model": "shortcut_len_emoji_source",
+   "n": 751,
+   "macro_f1": 0.6856610529789829,
+   "accuracy": 0.7030625832223701,
+   "per_class": {
+    "HAM": {
+     "precision": 0.42907801418439717,
+     "recall": 0.7423312883435583,
+     "f1": 0.5438202247191011,
+     "support": 163
+    },
+    "PROMO": {
+     "precision": 0.7696335078534031,
+     "recall": 0.5121951219512195,
+     "f1": 0.6150627615062761,
+     "support": 287
+    },
+    "SPAM": {
+     "precision": 0.935251798561151,
+     "recall": 0.8637873754152824,
+     "f1": 0.8981001727115717,
+     "support": 301
+    }
+   },
+   "confusion": [
+    [
+     121,
+     26,
+     16
+    ],
+    [
+     138,
+     147,
+     2
+    ],
+    [
+     23,
+     18,
+     260
+    ]
+   ],
+   "spam_pr_auc": 0.9440125689635149,
+   "legit_flagged_as_spam_rate": 0.04,
+   "ham_flagged_as_spam_rate": 0.09815950920245399,
+   "by_source": {
+    "SMS": {
+     "n": 468,
+     "macro_f1": 0.4098506069094305,
+     "spam_recall": 0.02564102564102564,
+     "spam_support": 39
+    },
+    "Telegram": {
+     "n": 283,
+     "macro_f1": 0.4003463203463203,
+     "spam_recall": 0.9885496183206107,
+     "spam_support": 262
+    }
+   },
+   "by_annotation": {
+    "ANNOTATOR-REVIEWED": 0.6825843310108578,
+    "MANUAL": 0.7154684095860566
+   }
+  },
+  {
+   "model": "tfidf_lr",
+   "n": 751,
+   "macro_f1": 0.877247714531967,
+   "accuracy": 0.8934753661784287,
+   "per_class": {
+    "HAM": {
+     "precision": 0.8633093525179856,
+     "recall": 0.7361963190184049,
+     "f1": 0.7947019867549668,
+     "support": 163
+    },
+    "PROMO": {
+     "precision": 0.9146757679180887,
+     "recall": 0.9337979094076655,
+     "f1": 0.9241379310344827,
+     "support": 287
+    },
+    "SPAM": {
+     "precision": 0.8871473354231975,
+     "recall": 0.9401993355481728,
+     "f1": 0.9129032258064517,
+     "support": 301
+    }
+   },
+   "confusion": [
+    [
+     120,
+     13,
+     30
+    ],
+    [
+     13,
+     268,
+     6
+    ],
+    [
+     6,
+     12,
+     283
+    ]
+   ],
+   "spam_pr_auc": 0.9776210436345163,
+   "legit_flagged_as_spam_rate": 0.08,
+   "ham_flagged_as_spam_rate": 0.18404907975460122,
+   "by_source": {
+    "SMS": {
+     "n": 468,
+     "macro_f1": 0.7669568088096369,
+     "spam_recall": 0.5641025641025641,
+     "spam_support": 39
+    },
+    "Telegram": {
+     "n": 283,
+     "macro_f1": 0.45615337043908477,
+     "spam_recall": 0.9961832061068703,
+     "spam_support": 262
+    }
+   },
+   "by_annotation": {
+    "ANNOTATOR-REVIEWED": 0.8898896213860686,
+    "MANUAL": 0.7816595752948262
+   },
+   "abstention_test": {
+    "threshold": 0.6,
+    "coverage": 0.9041278295605859,
+    "accuracy_when_answered": 0.9396170839469808,
+    "uncertain_rate": 0.0958721704394141
+   },
+   "ece_test": 0.031824335778173514
+  },
+  {
+   "model": "tfidf_svm_calibrated",
+   "n": 751,
+   "macro_f1": 0.8890863226822452,
+   "accuracy": 0.9014647137150466,
+   "per_class": {
+    "HAM": {
+     "precision": 0.8209876543209876,
+     "recall": 0.8159509202453987,
+     "f1": 0.8184615384615385,
+     "support": 163
+    },
+    "PROMO": {
+     "precision": 0.9265734265734266,
+     "recall": 0.9233449477351916,
+     "f1": 0.924956369982548,
+     "support": 287
+    },
+    "SPAM": {
+     "precision": 0.9207920792079208,
+     "recall": 0.9269102990033222,
+     "f1": 0.9238410596026491,
+     "support": 301
+    }
+   },
+   "confusion": [
+    [
+     133,
+     10,
+     20
+    ],
+    [
+     18,
+     265,
+     4
+    ],
+    [
+     11,
+     11,
+     279
+    ]
+   ],
+   "spam_pr_auc": 0.9763072874059836,
+   "legit_flagged_as_spam_rate": 0.05333333333333334,
+   "ham_flagged_as_spam_rate": 0.12269938650306748,
+   "by_source": {
+    "SMS": {
+     "n": 468,
+     "macro_f1": 0.7820014554294716,
+     "spam_recall": 0.5384615384615384,
+     "spam_support": 39
+    },
+    "Telegram": {
+     "n": 283,
+     "macro_f1": 0.5259373394966615,
+     "spam_recall": 0.9847328244274809,
+     "spam_support": 262
+    }
+   },
+   "by_annotation": {
+    "ANNOTATOR-REVIEWED": 0.8951239824205643,
+    "MANUAL": 0.8366683844464181
+   },
+   "abstention_test": {
+    "threshold": 0.73,
+    "coverage": 0.881491344873502,
+    "accuracy_when_answered": 0.9425981873111783,
+    "uncertain_rate": 0.118508655126498
+   },
+   "ece_test": 0.02693528460246612
+  }
+ ],
+ "challenge": [
+  {
+   "model": "tfidf_lr",
+   "n": 42,
+   "macro_f1": 0.48741119636260305,
+   "accuracy": 0.5476190476190477,
+   "per_class": {
+    "HAM": {
+     "precision": 0.625,
+     "recall": 0.3333333333333333,
+     "f1": 0.43478260869565216,
+     "support": 15
+    },
+    "PROMO": {
+     "precision": 0.6666666666666666,
+     "recall": 0.2857142857142857,
+     "f1": 0.4,
+     "support": 7
+    },
+    "SPAM": {
+     "precision": 0.5161290322580645,
+     "recall": 0.8,
+     "f1": 0.6274509803921569,
+     "support": 20
+    }
+   },
+   "confusion": [
+    [
+     5,
+     0,
+     10
+    ],
+    [
+     0,
+     2,
+     5
+    ],
+    [
+     3,
+     1,
+     16
+    ]
+   ],
+   "spam_pr_auc": 0.6997620977294859,
+   "legit_flagged_as_spam_rate": 0.6818181818181818,
+   "ham_flagged_as_spam_rate": 0.6666666666666666,
+   "by_script": {
+    "bangla": 0.7058823529411765,
+    "banglish": 0.5384615384615384,
+    "english": 0.3333333333333333
+   },
+   "rows": [
+    {
+     "text": "আপনার বিকাশ একাউন্ট ২৪ ঘণ্টার মধ্যে বন্ধ হয়ে যাবে। চালু রাখতে আপনার ফোনে আসা ওটিপি কোডটি এই নম্বরে পাঠান।",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.238
+    },
+    {
+     "text": "অভিনন্দন! আপনি ৫০,০০০ টাকার লটারি জিতেছেন। পুরস্কার পেতে ৫০০ টাকা রেজিস্ট্রেশন ফি বিকাশ করুন।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.654
+    },
+    {
+     "text": "নগদ থেকে বলছি, আপনার একাউন্টে ভুল করে টাকা চলে গেছে। দয়া করে পিন নম্বর দিয়ে ফেরত পাঠান।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.596
+    },
+    {
+     "text": "সরকারি অনুদানের ১০,০০০ টাকা পেতে এখনই লিংকে ক্লিক করুন: bit.ly/xxxx",
+     "label": "SPAM",
+     "pred": "PROMO",
+     "p_spam": 0.274
+    },
+    {
+     "text": "ঘরে বসে প্রতিদিন ২০০০ টাকা ইনকাম করুন। জয়েন করতে ৩০০ টাকা জামানত দিন।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.919
+    },
+    {
+     "text": "আপনার সিম কার্ডের রেজিস্ট্রেশন বাতিল হবে। আজকের মধ্যে ভেরিফিকেশন কোড দিন, না হলে সিম বন্ধ।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.731
+    },
+    {
+     "text": "আমি আপনার বিকাশে ভুল করে ৫০০০ টাকা পাঠিয়েছি, প্লিজ ফেরত দিন, আমার বাচ্চা অসুস্থ।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.725
+    },
+    {
+     "text": "চাকরির সুযোগ! মাসিক বেতন ৩৫,০০০ টাকা। আবেদনের জন্য ৫০০ টাকা প্রসেসিং ফি পাঠান।",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.379
+    },
+    {
+     "text": "আপনার পার্সেল আটকে আছে। ডেলিভারি চার্জ ৯৯ টাকা পরিশোধ করুন: parcel-bd-delivery.xyz",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.494
+    },
+    {
+     "text": "বাংলাদেশ ব্যাংক থেকে বলছি, আপনার কার্ড ব্লক করা হয়েছে। কার্ডের পিন ও সিভিভি বলুন।",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.141
+    },
+    {
+     "text": "Apnar bkash account block hoye jabe. OTP ta amake din, ami thik kore dicchi.",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.566
+    },
+    {
+     "text": "Congratulations! Apni 1 lakh taka jitechen. Prize pete 1000 taka pathan ei number e 017XXXXXXXX",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.596
+    },
+    {
+     "text": "Ghore boshe income korun daily 1500 tk. Telegram e join korun ekhoni",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.754
+    },
+    {
+     "text": "Bhai ami bkash office theke bolchi, apnar pin code ta bolen verify korte hobe",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.738
+    },
+    {
+     "text": "Job offer! Registration fee 500 tk send korun, kal theke kaj shuru",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.641
+    },
+    {
+     "text": "Apnar nagad e vul kore taka chole geche, plz ferot pathan 01XXXXXXXXX",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.646
+    },
+    {
+     "text": "Join our 1xbet agent group, deposit 500 get 5000 bonus! Limited time",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.769
+    },
+    {
+     "text": "Your bank account has been suspended. Verify now at secure-bkash-login.com to avoid closure.",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.776
+    },
+    {
+     "text": "URGENT: your parcel is on hold. Pay the delivery fee within 2 hours: http://192.168.4.20/pay",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.673
+    },
+    {
+     "text": "You have won an iPhone 16! Claim your prize, just pay the shipping charge today.",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.655
+    },
+    {
+     "text": "Your OTP for bKash is 482913. Do not share this code with anyone.",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.566
+    },
+    {
+     "text": "আপনার ওটিপি ৪৮২৯১৩। এই কোড কাউকে শেয়ার করবেন না।",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.793
+    },
+    {
+     "text": "Cash In Tk 500.00 from 017XXXXXXXX successful. Fee Tk 0.00. Balance Tk 1,250.00. TrxID XXXXX",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.64
+    },
+    {
+     "text": "আপনার একাউন্টে ১,২০০ টাকা জমা হয়েছে। বর্তমান ব্যালেন্স ৩,৪৫০ টাকা।",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.231
+    },
+    {
+     "text": "Ami ajke ashte parbo na, kal dekha hobe inshallah",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.55
+    },
+    {
+     "text": "Ammu khabar ready? Ami 10 minute e baire theke ashtesi",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.495
+    },
+    {
+     "text": "Bhai class er notes ta pathaba? Kal exam",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.502
+    },
+    {
+     "text": "Taka ta pathay dio tomar shubidha moto, kono tara nai",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.426
+    },
+    {
+     "text": "Meeting ta 4 tay shift hoise, sobaike janay dio",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.533
+    },
+    {
+     "text": "আজকে বাসায় আসার সময় দুধ আর ডিম নিয়ে এসো।",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.399
+    },
+    {
+     "text": "ভাইয়া, আমি পৌঁছে গেছি। চিন্তা করো না।",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.403
+    },
+    {
+     "text": "কাল সকাল ১০টায় ডাক্তারের অ্যাপয়েন্টমেন্ট আছে, মনে আছে তো?",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.286
+    },
+    {
+     "text": "Your appointment at the passport office is confirmed for 12 Dec, 10:00 AM. Bring your NID.",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.659
+    },
+    {
+     "text": "Dear customer, your electricity bill of Tk 1,140 is due on 15 Dec. Please pay to avoid late fee.",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.639
+    },
+    {
+     "text": "Hey, are we still on for dinner tonight?",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.611
+    },
+    {
+     "text": "আজই ১৯৯ টাকায় ২০ জিবি ইন্টারনেট, মেয়াদ ৭ দিন। ডায়াল করুন *121*XXXX#",
+     "label": "PROMO",
+     "pred": "PROMO",
+     "p_spam": 0.004
+    },
+    {
+     "text": "ঈদ অফার! সব পোশাকে ৩০% ছাড়, আমাদের শোরুমে চলে আসুন।",
+     "label": "PROMO",
+     "pred": "PROMO",
+     "p_spam": 0.199
+    },
+    {
+     "text": "Get 10GB internet for just Tk 99! Dial *121*XXXX# now. Valid 3 days.",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.574
+    },
+    {
+     "text": "Daraz 11.11 sale: up to 70% off on electronics. Shop on the Daraz app.",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.498
+    },
+    {
+     "text": "Robi te ajke 50 tk recharge korle 2GB free! Offer ajker jonno",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.59
+    },
+    {
+     "text": "Pathao Food e 40% discount, code FOODIE40 use korun",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.555
+    },
+    {
+     "text": "Foodpanda: free delivery all weekend on orders above Tk 299.",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.736
+    }
+   ]
+  },
+  {
+   "model": "tfidf_svm_calibrated",
+   "n": 42,
+   "macro_f1": 0.5476372924648787,
+   "accuracy": 0.5952380952380952,
+   "per_class": {
+    "HAM": {
+     "precision": 0.6428571428571429,
+     "recall": 0.6,
+     "f1": 0.6206896551724138,
+     "support": 15
+    },
+    "PROMO": {
+     "precision": 0.6666666666666666,
+     "recall": 0.2857142857142857,
+     "f1": 0.4,
+     "support": 7
+    },
+    "SPAM": {
+     "precision": 0.56,
+     "recall": 0.7,
+     "f1": 0.6222222222222222,
+     "support": 20
+    }
+   },
+   "confusion": [
+    [
+     9,
+     0,
+     6
+    ],
+    [
+     0,
+     2,
+     5
+    ],
+    [
+     5,
+     1,
+     14
+    ]
+   ],
+   "spam_pr_auc": 0.6623421131546179,
+   "legit_flagged_as_spam_rate": 0.5,
+   "ham_flagged_as_spam_rate": 0.4,
+   "by_script": {
+    "bangla": 0.6470588235294118,
+    "banglish": 0.6923076923076923,
+    "english": 0.4166666666666667
+   },
+   "rows": [
+    {
+     "text": "আপনার বিকাশ একাউন্ট ২৪ ঘণ্টার মধ্যে বন্ধ হয়ে যাবে। চালু রাখতে আপনার ফোনে আসা ওটিপি কোডটি এই নম্বরে পাঠান।",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.055
+    },
+    {
+     "text": "অভিনন্দন! আপনি ৫০,০০০ টাকার লটারি জিতেছেন। পুরস্কার পেতে ৫০০ টাকা রেজিস্ট্রেশন ফি বিকাশ করুন।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.693
+    },
+    {
+     "text": "নগদ থেকে বলছি, আপনার একাউন্টে ভুল করে টাকা চলে গেছে। দয়া করে পিন নম্বর দিয়ে ফেরত পাঠান।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.515
+    },
+    {
+     "text": "সরকারি অনুদানের ১০,০০০ টাকা পেতে এখনই লিংকে ক্লিক করুন: bit.ly/xxxx",
+     "label": "SPAM",
+     "pred": "PROMO",
+     "p_spam": 0.094
+    },
+    {
+     "text": "ঘরে বসে প্রতিদিন ২০০০ টাকা ইনকাম করুন। জয়েন করতে ৩০০ টাকা জামানত দিন।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.922
+    },
+    {
+     "text": "আপনার সিম কার্ডের রেজিস্ট্রেশন বাতিল হবে। আজকের মধ্যে ভেরিফিকেশন কোড দিন, না হলে সিম বন্ধ।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.758
+    },
+    {
+     "text": "আমি আপনার বিকাশে ভুল করে ৫০০০ টাকা পাঠিয়েছি, প্লিজ ফেরত দিন, আমার বাচ্চা অসুস্থ।",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.685
+    },
+    {
+     "text": "চাকরির সুযোগ! মাসিক বেতন ৩৫,০০০ টাকা। আবেদনের জন্য ৫০০ টাকা প্রসেসিং ফি পাঠান।",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.145
+    },
+    {
+     "text": "আপনার পার্সেল আটকে আছে। ডেলিভারি চার্জ ৯৯ টাকা পরিশোধ করুন: parcel-bd-delivery.xyz",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.422
+    },
+    {
+     "text": "বাংলাদেশ ব্যাংক থেকে বলছি, আপনার কার্ড ব্লক করা হয়েছে। কার্ডের পিন ও সিভিভি বলুন।",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.035
+    },
+    {
+     "text": "Apnar bkash account block hoye jabe. OTP ta amake din, ami thik kore dicchi.",
+     "label": "SPAM",
+     "pred": "HAM",
+     "p_spam": 0.349
+    },
+    {
+     "text": "Congratulations! Apni 1 lakh taka jitechen. Prize pete 1000 taka pathan ei number e 017XXXXXXXX",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.766
+    },
+    {
+     "text": "Ghore boshe income korun daily 1500 tk. Telegram e join korun ekhoni",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.749
+    },
+    {
+     "text": "Bhai ami bkash office theke bolchi, apnar pin code ta bolen verify korte hobe",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.762
+    },
+    {
+     "text": "Job offer! Registration fee 500 tk send korun, kal theke kaj shuru",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.638
+    },
+    {
+     "text": "Apnar nagad e vul kore taka chole geche, plz ferot pathan 01XXXXXXXXX",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.62
+    },
+    {
+     "text": "Join our 1xbet agent group, deposit 500 get 5000 bonus! Limited time",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.784
+    },
+    {
+     "text": "Your bank account has been suspended. Verify now at secure-bkash-login.com to avoid closure.",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.787
+    },
+    {
+     "text": "URGENT: your parcel is on hold. Pay the delivery fee within 2 hours: http://192.168.4.20/pay",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.655
+    },
+    {
+     "text": "You have won an iPhone 16! Claim your prize, just pay the shipping charge today.",
+     "label": "SPAM",
+     "pred": "SPAM",
+     "p_spam": 0.598
+    },
+    {
+     "text": "Your OTP for bKash is 482913. Do not share this code with anyone.",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.354
+    },
+    {
+     "text": "আপনার ওটিপি ৪৮২৯১৩। এই কোড কাউকে শেয়ার করবেন না।",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.824
+    },
+    {
+     "text": "Cash In Tk 500.00 from 017XXXXXXXX successful. Fee Tk 0.00. Balance Tk 1,250.00. TrxID XXXXX",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.617
+    },
+    {
+     "text": "আপনার একাউন্টে ১,২০০ টাকা জমা হয়েছে। বর্তমান ব্যালেন্স ৩,৪৫০ টাকা।",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.121
+    },
+    {
+     "text": "Ami ajke ashte parbo na, kal dekha hobe inshallah",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.408
+    },
+    {
+     "text": "Ammu khabar ready? Ami 10 minute e baire theke ashtesi",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.367
+    },
+    {
+     "text": "Bhai class er notes ta pathaba? Kal exam",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.438
+    },
+    {
+     "text": "Taka ta pathay dio tomar shubidha moto, kono tara nai",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.458
+    },
+    {
+     "text": "Meeting ta 4 tay shift hoise, sobaike janay dio",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.771
+    },
+    {
+     "text": "আজকে বাসায় আসার সময় দুধ আর ডিম নিয়ে এসো।",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.168
+    },
+    {
+     "text": "ভাইয়া, আমি পৌঁছে গেছি। চিন্তা করো না।",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.299
+    },
+    {
+     "text": "কাল সকাল ১০টায় ডাক্তারের অ্যাপয়েন্টমেন্ট আছে, মনে আছে তো?",
+     "label": "HAM",
+     "pred": "HAM",
+     "p_spam": 0.113
+    },
+    {
+     "text": "Your appointment at the passport office is confirmed for 12 Dec, 10:00 AM. Bring your NID.",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.673
+    },
+    {
+     "text": "Dear customer, your electricity bill of Tk 1,140 is due on 15 Dec. Please pay to avoid late fee.",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.521
+    },
+    {
+     "text": "Hey, are we still on for dinner tonight?",
+     "label": "HAM",
+     "pred": "SPAM",
+     "p_spam": 0.597
+    },
+    {
+     "text": "আজই ১৯৯ টাকায় ২০ জিবি ইন্টারনেট, মেয়াদ ৭ দিন। ডায়াল করুন *121*XXXX#",
+     "label": "PROMO",
+     "pred": "PROMO",
+     "p_spam": 0.003
+    },
+    {
+     "text": "ঈদ অফার! সব পোশাকে ৩০% ছাড়, আমাদের শোরুমে চলে আসুন।",
+     "label": "PROMO",
+     "pred": "PROMO",
+     "p_spam": 0.052
+    },
+    {
+     "text": "Get 10GB internet for just Tk 99! Dial *121*XXXX# now. Valid 3 days.",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.637
+    },
+    {
+     "text": "Daraz 11.11 sale: up to 70% off on electronics. Shop on the Daraz app.",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.514
+    },
+    {
+     "text": "Robi te ajke 50 tk recharge korle 2GB free! Offer ajker jonno",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.507
+    },
+    {
+     "text": "Pathao Food e 40% discount, code FOODIE40 use korun",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.506
+    },
+    {
+     "text": "Foodpanda: free delivery all weekend on orders above Tk 299.",
+     "label": "PROMO",
+     "pred": "SPAM",
+     "p_spam": 0.705
+    }
+   ]
+  }
+ ],
+ "abstention": {},
+ "calibration_ece": {},
+ "lr_C": 1,
+ "rules_on_test": {
+  "HAM": {
+   "n": 163,
+   "share_with_warning_sev2plus": 0.03680981595092025
+  },
+  "PROMO": {
+   "n": 287,
+   "share_with_warning_sev2plus": 0.10801393728222997
+  },
+  "SPAM": {
+   "n": 301,
+   "share_with_warning_sev2plus": 0.4119601328903654
+  }
+ },
+ "ondevice_bytes": 4642960,
+ "meta": {
+  "splits": {
+   "train": 8754,
+   "val": 778,
+   "test": 751
+  },
+  "abstain_target_accuracy": 0.95,
+  "runtime_s": 7
+ }
+}

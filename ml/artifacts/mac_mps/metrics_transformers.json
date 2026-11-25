@@ -1,0 +1,336 @@
+{
+ "results": [
+  {
+   "model": "sagorsarker/bangla-bert-base",
+   "best_epoch": 4,
+   "val_macro_f1": 0.8937405041793017,
+   "history": [
+    {
+     "epoch": 1,
+     "train_loss": 0.29197494901830756,
+     "val_macro_f1": 0.8847501531257027,
+     "sec": 602
+    },
+    {
+     "epoch": 2,
+     "train_loss": 0.14514549864851395,
+     "val_macro_f1": 0.8912597099994809,
+     "sec": 762
+    },
+    {
+     "epoch": 3,
+     "train_loss": 0.08763613749098868,
+     "val_macro_f1": 0.8828779070000136,
+     "sec": 717
+    },
+    {
+     "epoch": 4,
+     "train_loss": 0.04953908657307018,
+     "val_macro_f1": 0.8937405041793017,
+     "sec": 682
+    }
+   ],
+   "threshold": 0.98,
+   "test": {
+    "n": 751,
+    "macro_f1": 0.8906554870010019,
+    "accuracy": 0.9014647137150466,
+    "per_class_f1": {
+     "HAM": 0.8333333333333334,
+     "PROMO": 0.9183673469387755,
+     "SPAM": 0.920265780730897
+    },
+    "spam_recall": 0.920265780730897,
+    "spam_precision": 0.920265780730897,
+    "spam_pr_auc": 0.9735543607553994,
+    "legit_flagged_as_spam_rate": 0.05333333333333334,
+    "confusion": [
+     [
+      130,
+      17,
+      16
+     ],
+     [
+      9,
+      270,
+      8
+     ],
+     [
+      10,
+      14,
+      277
+     ]
+    ]
+   },
+   "test_sms": {
+    "n": 468,
+    "macro_f1": 0.7820053303924271,
+    "accuracy": 0.8782051282051282,
+    "per_class_f1": {
+     "HAM": 0.8673835125448028,
+     "PROMO": 0.9230769230769231,
+     "SPAM": 0.5555555555555556
+    },
+    "spam_recall": 0.5128205128205128,
+    "spam_precision": 0.6060606060606061,
+    "spam_pr_auc": 0.5988307645367297,
+    "legit_flagged_as_spam_rate": 0.030303030303030304,
+    "confusion": [
+     [
+      121,
+      16,
+      7
+     ],
+     [
+      9,
+      270,
+      6
+     ],
+     [
+      5,
+      14,
+      20
+     ]
+    ]
+   },
+   "test_telegram": {
+    "n": 283,
+    "macro_f1": 0.5050886220697541,
+    "accuracy": 0.9399293286219081,
+    "per_class_f1": {
+     "HAM": 0.5454545454545454,
+     "PROMO": 0.0,
+     "SPAM": 0.969811320754717
+    },
+    "spam_recall": 0.9809160305343512,
+    "spam_precision": 0.9589552238805971,
+    "spam_pr_auc": 0.9890039511321388,
+    "legit_flagged_as_spam_rate": 0.5238095238095238,
+    "confusion": [
+     [
+      9,
+      1,
+      9
+     ],
+     [
+      0,
+      0,
+      2
+     ],
+     [
+      5,
+      0,
+      257
+     ]
+    ]
+   },
+   "test_abstention": {
+    "coverage": 0.829560585885486,
+    "accuracy_when_answered": 0.9598715890850722
+   },
+   "challenge": {
+    "n": 42,
+    "macro_f1": 0.5437209302325582,
+    "accuracy": 0.5714285714285714,
+    "per_class_f1": {
+     "HAM": 0.48,
+     "PROMO": 0.5,
+     "SPAM": 0.6511627906976745
+    },
+    "spam_recall": 0.7,
+    "spam_precision": 0.6086956521739131,
+    "spam_pr_auc": 0.729066955606005,
+    "legit_flagged_as_spam_rate": 0.4090909090909091,
+    "confusion": [
+     [
+      6,
+      2,
+      7
+     ],
+     [
+      1,
+      4,
+      2
+     ],
+     [
+      3,
+      3,
+      14
+     ]
+    ]
+   },
+   "challenge_by_script": {
+    "bangla": 0.6470588235294118,
+    "banglish": 0.46153846153846156,
+    "english": 0.5833333333333334
+   }
+  },
+  {
+   "model": "FacebookAI/xlm-roberta-base",
+   "best_epoch": 3,
+   "val_macro_f1": 0.9158007543371013,
+   "history": [
+    {
+     "epoch": 1,
+     "train_loss": 0.3828321412726573,
+     "val_macro_f1": 0.8774490910545412,
+     "sec": 6010
+    },
+    {
+     "epoch": 2,
+     "train_loss": 0.18214151654405247,
+     "val_macro_f1": 0.9050736418859545,
+     "sec": 2340
+    },
+    {
+     "epoch": 3,
+     "train_loss": 0.13963398859602746,
+     "val_macro_f1": 0.9158007543371013,
+     "sec": 2530
+    },
+    {
+     "epoch": 4,
+     "train_loss": 0.10695558940953034,
+     "val_macro_f1": 0.9116973745278427,
+     "sec": 2378
+    }
+   ],
+   "threshold": 0.86,
+   "test": {
+    "n": 751,
+    "macro_f1": 0.88329003165494,
+    "accuracy": 0.8974700399467377,
+    "per_class_f1": {
+     "HAM": 0.8037383177570093,
+     "PROMO": 0.9291882556131261,
+     "SPAM": 0.9169435215946844
+    },
+    "spam_recall": 0.9169435215946844,
+    "spam_precision": 0.9169435215946844,
+    "spam_pr_auc": 0.9774337589620747,
+    "legit_flagged_as_spam_rate": 0.05555555555555555,
+    "confusion": [
+     [
+      129,
+      12,
+      22
+     ],
+     [
+      15,
+      269,
+      3
+     ],
+     [
+      14,
+      11,
+      276
+     ]
+    ]
+   },
+   "test_sms": {
+    "n": 468,
+    "macro_f1": 0.7576956594111369,
+    "accuracy": 0.8739316239316239,
+    "per_class_f1": {
+     "HAM": 0.8406779661016949,
+     "PROMO": 0.9324090121317158,
+     "SPAM": 0.5
+    },
+    "spam_recall": 0.41025641025641024,
+    "spam_precision": 0.64,
+    "spam_pr_auc": 0.6625825578041493,
+    "legit_flagged_as_spam_rate": 0.02097902097902098,
+    "confusion": [
+     [
+      124,
+      12,
+      8
+     ],
+     [
+      15,
+      269,
+      1
+     ],
+     [
+      12,
+      11,
+      16
+     ]
+    ]
+   },
+   "test_telegram": {
+    "n": 283,
+    "macro_f1": 0.4503860451815842,
+    "accuracy": 0.9363957597173145,
+    "per_class_f1": {
+     "HAM": 0.38461538461538464,
+     "PROMO": 0.0,
+     "SPAM": 0.966542750929368
+    },
+    "spam_recall": 0.9923664122137404,
+    "spam_precision": 0.9420289855072463,
+    "spam_pr_auc": 0.990523307498617,
+    "legit_flagged_as_spam_rate": 0.7619047619047619,
+    "confusion": [
+     [
+      5,
+      0,
+      14
+     ],
+     [
+      0,
+      0,
+      2
+     ],
+     [
+      2,
+      0,
+      260
+     ]
+    ]
+   },
+   "test_abstention": {
+    "coverage": 0.8428761651131824,
+    "accuracy_when_answered": 0.9636650868878357
+   },
+   "challenge": {
+    "n": 42,
+    "macro_f1": 0.6777882205513786,
+    "accuracy": 0.6666666666666666,
+    "per_class_f1": {
+     "HAM": 0.6875,
+     "PROMO": 0.7142857142857143,
+     "SPAM": 0.631578947368421
+    },
+    "spam_recall": 0.6,
+    "spam_precision": 0.6666666666666666,
+    "spam_pr_auc": 0.7313637187295462,
+    "legit_flagged_as_spam_rate": 0.2727272727272727,
+    "confusion": [
+     [
+      11,
+      0,
+      4
+     ],
+     [
+      0,
+      5,
+      2
+     ],
+     [
+      6,
+      2,
+      12
+     ]
+    ]
+   },
+   "challenge_by_script": {
+    "bangla": 0.5882352941176471,
+    "banglish": 0.6153846153846154,
+    "english": 0.8333333333333334
+   }
+  }
+ ],
+ "device": "mps",
+ "gpu": null
+}

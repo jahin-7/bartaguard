@@ -1,0 +1,97 @@
+{
+ "threshold": 0.6,
+ "test": {
+  "n": 751,
+  "verdicts": {
+   "suspicious": 319,
+   "promotional": 238,
+   "normal": 124,
+   "uncertain": 70
+  },
+  "uncertain_rate": 0.09320905459387484,
+  "accuracy_when_answered": 0.8928046989720999,
+  "spam_caught_as_suspicious": 0.9003322259136213,
+  "spam_missed_called_safe": 0.019933554817275746,
+  "legit_called_suspicious": 0.10666666666666667
+ },
+ "test_sms": {
+  "n": 468,
+  "verdicts": {
+   "promotional": 238,
+   "normal": 121,
+   "suspicious": 58,
+   "uncertain": 51
+  },
+  "uncertain_rate": 0.10897435897435898,
+  "accuracy_when_answered": 0.8513189448441247,
+  "spam_caught_as_suspicious": 0.5384615384615384,
+  "spam_missed_called_safe": 0.15384615384615385,
+  "legit_called_suspicious": 0.08624708624708624
+ },
+ "test_telegram": {
+  "n": 283,
+  "verdicts": {
+   "suspicious": 261,
+   "uncertain": 19,
+   "normal": 3
+  },
+  "uncertain_rate": 0.06713780918727916,
+  "accuracy_when_answered": 0.9583333333333334,
+  "spam_caught_as_suspicious": 0.9541984732824428,
+  "spam_missed_called_safe": 0.0,
+  "legit_called_suspicious": 0.5238095238095238
+ },
+ "challenge_note": "Rules were tuned on this set, so challenge numbers are a sanity check, not an independent test.",
+ "challenge": {
+  "n": 42,
+  "verdicts": {
+   "suspicious": 21,
+   "uncertain": 18,
+   "promotional": 2,
+   "normal": 1
+  },
+  "uncertain_rate": 0.42857142857142855,
+  "accuracy_when_answered": 0.9583333333333334,
+  "spam_caught_as_suspicious": 1.0,
+  "spam_missed_called_safe": 0.0,
+  "legit_called_suspicious": 0.045454545454545456
+ },
+ "challenge_bangla": {
+  "n": 17,
+  "verdicts": {
+   "suspicious": 11,
+   "uncertain": 3,
+   "promotional": 2,
+   "normal": 1
+  },
+  "uncertain_rate": 0.17647058823529413,
+  "accuracy_when_answered": 0.9285714285714286,
+  "spam_caught_as_suspicious": 1.0,
+  "spam_missed_called_safe": 0.0,
+  "legit_called_suspicious": 0.14285714285714285
+ },
+ "challenge_banglish": {
+  "n": 13,
+  "verdicts": {
+   "uncertain": 7,
+   "suspicious": 6
+  },
+  "uncertain_rate": 0.5384615384615384,
+  "accuracy_when_answered": 1.0,
+  "spam_caught_as_suspicious": 1.0,
+  "spam_missed_called_safe": 0.0,
+  "legit_called_suspicious": 0.0
+ },
+ "challenge_english": {
+  "n": 12,
+  "verdicts": {
+   "uncertain": 8,
+   "suspicious": 4
+  },
+  "uncertain_rate": 0.6666666666666666,
+  "accuracy_when_answered": 1.0,
+  "spam_caught_as_suspicious": 1.0,
+  "spam_missed_called_safe": 0.0,
+  "legit_called_suspicious": 0.0
+ }
+}

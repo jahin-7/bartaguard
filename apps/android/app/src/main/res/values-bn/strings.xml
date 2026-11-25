@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">বার্তাগার্ড</string>
+    <string name="share_label">বার্তাগার্ডে যাচাই করুন</string>
+    <string name="watch_label">বার্তাগার্ড প্রতারণা সতর্কতা</string>
+</resources>

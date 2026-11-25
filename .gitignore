@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+# BTTC is CC BY 4.0; fetch the original from Mendeley (doi:10.17632/5wrm959d6f.1). Splits are derived and kept.
+data/raw/
+data/kaggle_upload/
+# fine-tuned transformer weights (~1.7 GB); metrics and test predictions are kept
+ml/artifacts/mac_mps/*/
+apps/ios/BartaGuardCore/.build/
+apps/ios/**/.swiftpm/
+apps/ios/**/xcuserdata/
