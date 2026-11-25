@@ -213,6 +213,12 @@ struct SettingsView: View {
             }
             .pickerStyle(.segmented).padding(6).glassCard(radius: 20)
 
+            section(l.t("Appearance", "থিম"))
+            Picker("", selection: $m.appearance) {
+                Text(l.t("Automatic", "অটো")).tag("system"); Text(l.t("Light", "লাইট")).tag("light"); Text(l.t("Dark", "ডার্ক")).tag("dark")
+            }
+            .pickerStyle(.segmented).padding(6).glassCard(radius: 20)
+
             section(l.t("Automatic SMS checking", "স্বয়ংক্রিয় SMS যাচাই"))
             VStack(alignment: .leading, spacing: 10) {
                 Text(l.t("Turn on the SMS filter", "SMS ফিল্টার চালু করুন")).font(.headline)

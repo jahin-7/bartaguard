@@ -23,6 +23,11 @@ struct SavedCheck: Codable, Identifiable {
 @Observable
 final class AppModel {
     var lang: String? = Lang.saved { didSet { Lang.saved = lang } }
+    /// "system", "light" or "dark".
+    var appearance = UserDefaults.standard.string(forKey: "appearance") ?? "system" {
+        didSet { UserDefaults.standard.set(appearance, forKey: "appearance") }
+    }
+    var scheme: ColorScheme? { appearance == "dark" ? .dark : appearance == "light" ? .light : nil }
     var tab = 0
     var input = ""
     var checked: (text: String, analysis: Analysis)?
@@ -81,5 +86,7 @@ struct RootView: View {
                 }
             }
         }
+        .preferredColorScheme(m.scheme)
+        .animation(.easeInOut(duration: 0.4), value: m.appearance)
     }
 }

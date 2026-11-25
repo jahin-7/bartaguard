@@ -88,17 +88,22 @@ struct ResultView: View {
     let analysis: Analysis
     let l: L
     var compact = false
+    @State private var shown = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 10) {
                 Image(systemName: analysis.verdict.symbol)
                     .font(.system(size: 30, weight: .semibold)).foregroundStyle(analysis.verdict.color)
+                    .symbolEffect(.bounce, value: shown)
                     .frame(width: 60, height: 60).background(analysis.verdict.color.opacity(0.16), in: .circle)
+                    .scaleEffect(shown ? 1 : 0.4).opacity(shown ? 1 : 0)
                 Text(l.title(analysis.verdict)).font(.system(size: 28, weight: .bold))
                 Text(l.summary(analysis)).font(.body).foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading).padding(22).glassCard(tint: analysis.verdict.color)
+            .onAppear { withAnimation(.spring(response: 0.45, dampingFraction: 0.55).delay(0.1)) { shown = true } }
+            .sensoryFeedback(analysis.verdict == .suspicious ? .warning : .success, trigger: shown)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(l.t("The message", "মেসেজটি")).font(.footnote.weight(.semibold)).foregroundStyle(.secondary)

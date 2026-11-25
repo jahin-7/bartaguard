@@ -20,6 +20,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     var ready by mutableStateOf(false); private set
     var lang by mutableStateOf(prefs.lang); private set
+    var appearance by mutableStateOf(prefs.appearance); private set
     var tab by mutableStateOf(0)
     var input by mutableStateOf("")
     var checked by mutableStateOf<Pair<String, Analysis>?>(null); private set
@@ -40,6 +41,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setLanguage(l: String) { prefs.lang = l; lang = l }
+    fun chooseAppearance(a: String) { prefs.appearance = a; appearance = a }
 
     /** Text arriving from the share sheet, the text-selection menu, or a scam warning. */
     fun receive(text: String, viaWatch: Boolean) {

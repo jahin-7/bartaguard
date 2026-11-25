@@ -30,6 +30,10 @@ class Prefs(ctx: Context) {
     var lang: String?
         get() = sp.getString("lang", null)
         set(v) = sp.edit().putString("lang", v).apply()
+    /** "system", "light" or "dark". */
+    var appearance: String
+        get() = sp.getString("appearance", "system") ?: "system"
+        set(v) = sp.edit().putString("appearance", v).apply()
     var watch: Boolean
         get() = sp.getBoolean("watch", false)
         set(v) = sp.edit().putBoolean("watch", v).apply()

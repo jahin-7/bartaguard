@@ -1,28 +1,36 @@
 package bd.bartaguard.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -30,28 +38,53 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.ClipOp
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.addOutline
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bd.bartaguard.engine.Verdict
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
 
 // "Liquid Glass" in Compose: translucent, softly lit layers floating over a slow colour field.
-// Real backdrop blur needs RenderEffect on the content behind, which Compose can't sample cheaply,
-// so the glass is a frosted tint + specular rim + soft shadow. It reads the same and costs nothing.
+// The bars (tab bar, top edge) blur what scrolls under them for real on Android 12+ (Haze);
+// the cards sit on the colour field, which is already soft, so they use a frosted tint, a
+// specular sheen and a rim that follow the phone's tilt.
 
 @Immutable
 data class Palette(
@@ -70,6 +103,8 @@ data class Palette(
     val warn: Color,
     val info: Color,
     val ok: Color,
+    val thumb: Color,
+    val switchOff: Color,
 )
 
 private val Light = Palette(
@@ -78,7 +113,8 @@ private val Light = Palette(
     glass = Color.White.copy(alpha = 0.55f), glassStrong = Color.White.copy(alpha = 0.78f),
     rimTop = Color.White.copy(alpha = 0.95f), rimBottom = Color.White.copy(alpha = 0.25f),
     text = Color(0xFF0B0D12), sub = Color(0xFF4A505C), faint = Color(0xFF8A90A0),
-    accent = Color(0xFF0A84FF), danger = Color(0xFFFF3B30), warn = Color(0xFFFF9500), info = Color(0xFF0A84FF), ok = Color(0xFF28B463),
+    accent = Color(0xFF0A84FF), danger = Color(0xFFFF3B30), warn = Color(0xFFFF9500), info = Color(0xFF0A84FF), ok = Color(0xFF34C759),
+    thumb = Color.White, switchOff = Color(0xFFE3E3E8),
 )
 
 private val Dark = Palette(
@@ -88,14 +124,25 @@ private val Dark = Palette(
     rimTop = Color.White.copy(alpha = 0.35f), rimBottom = Color.White.copy(alpha = 0.06f),
     text = Color(0xFFF5F7FB), sub = Color(0xFFB6BCC9), faint = Color(0xFF7D8494),
     accent = Color(0xFF409CFF), danger = Color(0xFFFF453A), warn = Color(0xFFFF9F0A), info = Color(0xFF409CFF), ok = Color(0xFF30D158),
+    thumb = Color(0xFF636366), switchOff = Color(0xFF39393D),
 )
 
 val LocalPalette = staticCompositionLocalOf { Light }
 val P: Palette @Composable get() = LocalPalette.current
 
+/** Switching light/dark cross-fades every colour instead of snapping, like iOS does. */
 @Composable
-fun GlassTheme(content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalPalette provides if (isSystemInDarkTheme()) Dark else Light, content = content)
+fun GlassTheme(dark: Boolean, content: @Composable () -> Unit) {
+    val t = if (dark) Dark else Light
+    @Composable fun a(c: Color, l: String) = animateColorAsState(c, tween(500), label = l).value
+    val p = Palette(
+        dark = dark, bg = a(t.bg, "bg"), blobs = t.blobs.mapIndexed { i, c -> a(c, "blob$i") },
+        glass = a(t.glass, "glass"), glassStrong = a(t.glassStrong, "glassStrong"), rimTop = a(t.rimTop, "rimTop"), rimBottom = a(t.rimBottom, "rimBottom"),
+        text = a(t.text, "text"), sub = a(t.sub, "sub"), faint = a(t.faint, "faint"), accent = a(t.accent, "accent"),
+        danger = a(t.danger, "danger"), warn = a(t.warn, "warn"), info = a(t.info, "info"), ok = a(t.ok, "ok"),
+        thumb = a(t.thumb, "thumb"), switchOff = a(t.switchOff, "switchOff"),
+    )
+    CompositionLocalProvider(LocalPalette provides p, content = content)
 }
 
 fun Palette.verdictColor(v: Verdict) = when (v) {
@@ -105,44 +152,102 @@ fun Palette.verdictColor(v: Verdict) = when (v) {
     Verdict.NORMAL -> ok
 }
 
-/** The slow-moving colour field everything floats on. */
+/** The slow-moving colour field everything floats on. It drifts with tilt for a little depth. */
 @Composable
-fun GlassBackdrop(tint: Color? = null, content: @Composable BoxScope.() -> Unit) {
+fun GlassBackdrop(tint: Color? = null, modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     val p = P
     val t = rememberInfiniteTransition(label = "blobs")
     val phase by t.animateFloat(0f, 1f, infiniteRepeatable(tween(18000, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "phase")
-    val wash by animateColorAsState(tint ?: Color.Transparent, tween(600), label = "wash")
-    Box(Modifier.fillMaxSize().background(p.bg)) {
+    val wash by animateColorAsState(tint ?: Color.Transparent, tween(700), label = "wash")
+    Box(modifier.fillMaxSize().background(p.bg)) {
         Canvas(Modifier.fillMaxSize()) {
             val w = size.width; val h = size.height
+            val tilt = Tilt.value
+            val par = Offset(tilt.x * 28.dp.toPx(), tilt.y * 28.dp.toPx())
             val spots = listOf(
                 Offset(w * (0.15f + 0.2f * phase), h * 0.12f), Offset(w * (0.95f - 0.15f * phase), h * 0.32f),
                 Offset(w * 0.2f, h * (0.62f + 0.1f * phase)), Offset(w * (0.8f + 0.1f * phase), h * 0.88f),
             )
-            spots.forEachIndexed { i, c ->
-                val r = w * (0.75f + 0.1f * i % 2)
+            spots.forEachIndexed { i, c0 ->
+                val c = c0 + par * (if (i % 2 == 0) 1f else -0.6f)
+                val r = w * (0.75f + 0.1f * (i % 2))
                 drawCircle(Brush.radialGradient(listOf(p.blobs[i].copy(alpha = if (p.dark) 0.55f else 0.7f), Color.Transparent), c, r), r, c)
             }
             if (wash.alpha > 0f) {
-                drawRect(Brush.verticalGradient(listOf(wash.copy(alpha = if (p.dark) 0.35f else 0.25f), Color.Transparent), endY = h * 0.6f))
+                drawRect(Brush.verticalGradient(listOf(wash.copy(alpha = wash.alpha * if (p.dark) 0.35f else 0.25f), Color.Transparent), endY = h * 0.6f))
             }
         }
         content()
     }
 }
 
-fun Modifier.glass(p: Palette, shape: Shape = RoundedCornerShape(28.dp), strong: Boolean = false, elevation: Dp = 18.dp) = this
-    .shadow(elevation, shape, ambientColor = Color.Black.copy(alpha = 0.10f), spotColor = Color.Black.copy(alpha = if (p.dark) 0.5f else 0.14f))
-    .clip(shape)
-    .background(if (strong) p.glassStrong else p.glass)
-    .background(Brush.verticalGradient(listOf(Color.White.copy(alpha = if (p.dark) 0.06f else 0.25f), Color.Transparent)))
-    .border(1.dp, Brush.verticalGradient(listOf(p.rimTop, p.rimBottom)), shape)
+/** Frosted glass for the bars: what scrolls underneath is blurred for real. */
+fun barStyle(p: Palette) = HazeStyle(
+    backgroundColor = p.bg,
+    tint = HazeTint(if (p.dark) Color(0xFF1C1E26).copy(alpha = 0.55f) else Color.White.copy(alpha = 0.6f)),
+    blurRadius = 26.dp,
+    noiseFactor = 0.05f,
+)
 
-@Composable
-fun GlassCard(modifier: Modifier = Modifier, strong: Boolean = false, padding: Dp = 20.dp, content: @Composable ColumnScope.() -> Unit) {
-    Column(modifier.glass(P, strong = strong).padding(padding), content = content)
+/**
+ * The glass surface. [tint] washes it with a colour (the verdict); [haze] swaps the flat frost for
+ * a real backdrop blur. The sheen and rim are drawn from the phone's tilt.
+ */
+fun Modifier.glass(
+    p: Palette, shape: Shape = RoundedCornerShape(28.dp), strong: Boolean = false, elevation: Dp = 18.dp,
+    tint: Color? = null, haze: HazeState? = null,
+): Modifier = this
+    .outerShadow(shape, elevation, Color.Black.copy(alpha = if (p.dark) 0.45f else 0.10f))
+    .clip(shape)
+    .then(if (haze != null) Modifier.hazeEffect(haze, barStyle(p)) else Modifier.background(if (strong) p.glassStrong else p.glass))
+    .then(if (tint != null) Modifier.background(tint.copy(alpha = if (p.dark) 0.16f else 0.10f)) else Modifier)
+    .drawWithCache {
+        val outline = Path().apply { addOutline(shape.createOutline(size, layoutDirection, this@drawWithCache)) }
+        val stroke = Stroke(2.dp.toPx()) // half of it is clipped away: a crisp 1 dp rim
+        onDrawWithContent {
+            val tl = Tilt.value
+            val w = size.width; val h = size.height
+            drawRect(Brush.linearGradient(
+                listOf(Color.White.copy(alpha = if (p.dark) 0.07f else 0.30f), Color.Transparent),
+                start = Offset(w * (0.1f - tl.x * 0.4f), -h * 0.1f), end = Offset(w * (0.45f - tl.x * 0.4f), h * (0.75f + tl.y * 0.2f)),
+            ))
+            drawContent()
+            drawPath(outline, Brush.linearGradient(
+                listOf(p.rimTop, p.rimBottom, p.rimTop.copy(alpha = p.rimTop.alpha * 0.45f)),
+                start = Offset(w * (0.3f - tl.x * 0.5f), 0f), end = Offset(w * (0.7f - tl.x * 0.5f), h),
+            ), style = stroke)
+        }
+    }
+
+/**
+ * A shadow drawn only outside the shape. Material elevation shadows show through translucent
+ * glass as a grey band; real glass doesn't do that.
+ */
+fun Modifier.outerShadow(shape: Shape, elevation: Dp, color: Color) = drawBehind {
+    if (elevation <= 0.dp) return@drawBehind
+    val path = Path().apply { addOutline(shape.createOutline(size, layoutDirection, this@drawBehind)) }
+    clipPath(path, ClipOp.Difference) {
+        drawIntoCanvas { c ->
+            val paint = Paint().asFrameworkPaint().apply {
+                isAntiAlias = true
+                this.color = android.graphics.Color.BLACK
+                setShadowLayer(elevation.toPx(), 0f, elevation.toPx() / 2.5f, color.toArgb())
+            }
+            c.nativeCanvas.drawPath(path.asAndroidPath(), paint)
+        }
+    }
 }
 
+@Composable
+fun GlassCard(
+    modifier: Modifier = Modifier, strong: Boolean = false, padding: Dp = 20.dp, tint: Color? = null,
+    onClick: (() -> Unit)? = null, content: @Composable ColumnScope.() -> Unit,
+) {
+    val m = if (onClick != null) modifier.pressable(scale = 0.97f, onClick = onClick) else modifier
+    Column(m.fillMaxWidth().glass(P, strong = strong, tint = tint).padding(padding), content = content)
+}
+
+/** iOS 26 glass button: squishes on press and lights up from inside. */
 @Composable
 fun GlassButton(
     label: String, modifier: Modifier = Modifier, icon: ImageVector? = null, prominent: Boolean = false,
@@ -150,20 +255,32 @@ fun GlassButton(
 ) {
     val p = P
     val shape = CircleShape
+    val src = remember { MutableInteractionSource() }
+    val pressed by src.collectIsPressedAsState()
+    val glow by animateFloatAsState(if (pressed && enabled) 1f else 0f, if (pressed) Springs.press() else tween(350), label = "glow")
+    val fade by animateFloatAsState(if (enabled) 1f else 0.45f, tween(250), label = "enabled")
     val base = if (prominent) Modifier
         .shadow(14.dp, shape, spotColor = p.accent.copy(alpha = 0.5f))
         .clip(shape)
-        .background(Brush.verticalGradient(listOf(p.accent.copy(alpha = 0.92f), p.accent)))
-        .border(1.dp, Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.6f), Color.White.copy(alpha = 0.05f))), shape)
+        .background(Brush.verticalGradient(listOf(lerp(p.accent, Color.White, 0.12f), p.accent)))
+        .drawWithCache {
+            val o = Path().apply { addOutline(shape.createOutline(size, layoutDirection, this@drawWithCache)) }
+            onDrawWithContent {
+                drawContent()
+                drawPath(o, Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.65f), Color.White.copy(alpha = 0.05f))), style = Stroke(2.dp.toPx()))
+            }
+        }
     else Modifier.glass(p, shape, elevation = 8.dp)
     Row(
-        modifier.then(base).clickable(enabled = enabled, onClick = onClick).padding(horizontal = 20.dp, vertical = 14.dp),
+        modifier.pressable(enabled, 0.95f, src) { onClick() }.graphicsLayer { alpha = fade }.then(base)
+            .drawWithCache { onDrawWithContent { drawContent(); if (glow > 0f) drawRect(Color.White.copy(alpha = glow * if (p.dark) 0.14f else 0.22f)) } }
+            .padding(horizontal = 20.dp, vertical = 15.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
     ) {
         val fg = if (prominent) Color.White else p.text
-        icon?.let { Icon(it, null, tint = fg.copy(alpha = if (enabled) 1f else 0.4f), modifier = Modifier.size(20.dp).padding(end = 0.dp)) }
+        icon?.let { Icon(it, null, tint = fg, modifier = Modifier.size(20.dp)) }
         if (icon != null) Box(Modifier.size(8.dp))
-        Text(label, color = fg.copy(alpha = if (enabled) 1f else 0.4f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+        Text(label, color = fg, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
     }
 }
 
@@ -175,33 +292,108 @@ fun Chip(text: String, color: Color, modifier: Modifier = Modifier) {
     )
 }
 
-/** Floating capsule tab bar, iOS 26 style. */
+/**
+ * Floating capsule tab bar, iOS 26 style. The selection is a drop of glass that slides between tabs;
+ * its leading edge moves first and the trailing edge catches up, so it stretches as it goes.
+ */
 @Composable
-fun GlassTabBar(items: List<Pair<ImageVector, String>>, selected: Int, modifier: Modifier = Modifier, onSelect: (Int) -> Unit) {
+fun GlassTabBar(items: List<Pair<ImageVector, String>>, selected: Int, haze: HazeState, modifier: Modifier = Modifier, onSelect: (Int) -> Unit) {
     val p = P
-    Row(modifier.glass(p, CircleShape, strong = true, elevation = 24.dp).padding(6.dp), verticalAlignment = Alignment.CenterVertically) {
-        items.forEachIndexed { i, (icon, label) ->
-            val on = i == selected
-            val bg by animateColorAsState(if (on) p.accent.copy(alpha = if (p.dark) 0.28f else 0.14f) else Color.Transparent, label = "tab")
-            Column(
-                Modifier.weight(1f).clip(CircleShape).background(bg)
-                    .clickable(remember { MutableInteractionSource() }, null) { onSelect(i) }
-                    .padding(vertical = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(icon, label, tint = if (on) p.accent else p.sub, modifier = Modifier.size(24.dp))
-                Text(label, color = if (on) p.accent else p.sub, fontSize = 11.sp, fontWeight = if (on) FontWeight.SemiBold else FontWeight.Medium, maxLines = 1)
+    val view = LocalView.current
+    BoxWithConstraints(modifier.glass(p, CircleShape, elevation = 24.dp, haze = haze).padding(5.dp)) {
+        val w = maxWidth / items.size
+        var prev by remember { mutableIntStateOf(selected) }
+        val right = selected >= prev
+        val lead = spring<Dp>(dampingRatio = 0.72f, stiffness = 900f)
+        val trail = spring<Dp>(dampingRatio = 0.68f, stiffness = 240f)
+        val l by animateDpAsState(w * selected, if (right) trail else lead, label = "l")
+        val r by animateDpAsState(w * (selected + 1), if (right) lead else trail, label = "r")
+        SideEffect { prev = selected }
+        Box(
+            Modifier.offset(x = l).width(r - l).height(54.dp).clip(CircleShape)
+                .background(if (p.dark) Color.White.copy(alpha = 0.14f) else Color.Black.copy(alpha = 0.06f))
+        )
+        Row(Modifier.fillMaxWidth().height(54.dp), verticalAlignment = Alignment.CenterVertically) {
+            items.forEachIndexed { i, (icon, label) ->
+                val on = i == selected
+                val color by animateColorAsState(if (on) p.accent else p.text, tween(200), label = "tabc")
+                val bounce = remember { Animatable(1f) }
+                LaunchedEffect(on) {
+                    if (on) { bounce.snapTo(0.72f); bounce.animateTo(1f, spring(dampingRatio = 0.38f, stiffness = 520f)) }
+                }
+                Column(
+                    Modifier.weight(1f).fillMaxHeight()
+                        .pressable(scale = 0.88f, haptic = null) { if (!on) view.haptic(Haptic.Tap); onSelect(i) },
+                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+                ) {
+                    Icon(icon, label, tint = color, modifier = Modifier.size(25.dp).graphicsLayer { scaleX = bounce.value; scaleY = bounce.value })
+                    Text(label, color = color, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+                }
             }
         }
     }
 }
 
+/** iOS segmented control: the thumb slides over with a spring. */
 @Composable
-fun LargeTitle(text: String, sub: String? = null) {
-    Column(Modifier.padding(start = 4.dp, bottom = 4.dp)) {
-        Text(text, style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, letterSpacing = (-0.5).sp), color = P.text)
+fun Segmented(options: List<Pair<String, String>>, selected: String, modifier: Modifier = Modifier, onSelect: (String) -> Unit) {
+    val p = P
+    val view = LocalView.current
+    BoxWithConstraints(modifier.fillMaxWidth().glass(p, RoundedCornerShape(20.dp), elevation = 6.dp).padding(4.dp)) {
+        val w = maxWidth / options.size
+        val idx = options.indexOfFirst { it.first == selected }.coerceAtLeast(0)
+        val x by animateDpAsState(w * idx, Springs.bouncy(), label = "seg")
+        Box(Modifier.offset(x = x).width(w).height(40.dp).shadow(4.dp, RoundedCornerShape(16.dp)).clip(RoundedCornerShape(16.dp)).background(p.thumb))
+        Row(Modifier.fillMaxWidth()) {
+            options.forEach { (k, label) ->
+                Box(
+                    Modifier.weight(1f).height(40.dp).pressable(scale = 0.94f, haptic = null) {
+                        if (k != selected) { view.haptic(Haptic.Toggle); onSelect(k) }
+                    },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(label, color = p.text, fontWeight = if (k == selected) FontWeight.SemiBold else FontWeight.Medium, fontSize = 15.sp)
+                }
+            }
+        }
+    }
+}
+
+/** iOS switch: green track, white knob that stretches while held and springs across. */
+@Composable
+fun IosSwitch(on: Boolean, onChange: (Boolean) -> Unit) {
+    val p = P
+    val view = LocalView.current
+    val src = remember { MutableInteractionSource() }
+    val pressed by src.collectIsPressedAsState()
+    val progress by animateFloatAsState(if (on) 1f else 0f, Springs.bouncy(), label = "sw")
+    val stretch by animateDpAsState(if (pressed) 7.dp else 0.dp, Springs.smooth(), label = "knob")
+    val frac = progress.coerceIn(0f, 1f)
+    Box(
+        Modifier.size(width = 51.dp, height = 31.dp).clip(CircleShape).background(lerp(p.switchOff, p.ok, frac))
+            .clickable(src, null) { view.haptic(Haptic.Toggle); onChange(!on) }.padding(2.dp)
+    ) {
+        val knob = 27.dp + stretch
+        Box(
+            Modifier.offset(x = (47.dp - knob) * progress).size(width = knob, height = 27.dp)
+                .shadow(3.dp, CircleShape).clip(CircleShape).background(Color.White)
+        )
+    }
+}
+
+@Composable
+fun LargeTitle(text: String, sub: String? = null, modifier: Modifier = Modifier) {
+    Column(modifier.padding(start = 4.dp, bottom = 4.dp)) {
+        Text(text, style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, lineHeight = 41.sp), color = P.text)
         sub?.let { Text(it, color = P.sub, fontSize = 15.sp, modifier = Modifier.padding(top = 2.dp)) }
     }
+}
+
+/** Stretches from its leading edge when the page is pulled down, like an iOS large title. */
+fun Modifier.titleStretch(pull: () -> Float) = graphicsLayer {
+    val s = 1f + (pull() / 2600f).coerceIn(0f, 0.09f)
+    scaleX = s; scaleY = s
+    transformOrigin = TransformOrigin(0f, 0.5f)
 }
 
 @Composable
@@ -209,6 +401,3 @@ fun SectionLabel(text: String) {
     Text(text.uppercase(), color = P.faint, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.6.sp,
         modifier = Modifier.padding(start = 8.dp, top = 8.dp))
 }
-
-@Composable
-fun RowScope.Spacer1() = Box(Modifier.weight(1f))
