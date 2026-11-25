@@ -134,7 +134,10 @@ def main():
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(a.data / "bttc_splits.csv")
-    ch = pd.read_csv(a.data / "challenge_set.csv")
+    ch_path = a.data / "challenge_set.csv"
+    if not ch_path.exists():  # repo layout: data/processed + ml/challenge
+        ch_path = Path(__file__).resolve().parents[2] / "challenge" / "challenge_set.csv"
+    ch = pd.read_csv(ch_path)
     tr, va, te = (df[df.split == s].reset_index(drop=True) for s in ("train", "val", "test"))
     results = []
     for ckpt in a.models:

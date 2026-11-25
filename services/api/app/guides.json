@@ -1,0 +1,50 @@
+[
+ {
+  "en": "Fake OTP / PIN request",
+  "bn": "ভুয়া OTP / পিন চাওয়া",
+  "signsEn": "Someone calls or texts saying they are from bKash, Nagad, a bank or your operator and asks for a code.",
+  "signsBn": "কেউ বিকাশ, নগদ, ব্যাংক বা অপারেটরের লোক পরিচয় দিয়ে ফোন/মেসেজ করে কোড চায়।",
+  "doEn": "Never share a PIN or OTP. No company asks for it. Hang up and call the number in the official app.",
+  "doBn": "কখনো পিন বা OTP দেবেন না। কোনো প্রতিষ্ঠান তা চায় না। ফোন রেখে অফিসিয়াল অ্যাপের নম্বরে কল করুন।"
+ },
+ {
+  "en": "\"Money sent by mistake\"",
+  "bn": "\"ভুল করে টাকা চলে গেছে\"",
+  "signsEn": "A message says money reached you by mistake, then a call begs you to send it back.",
+  "signsBn": "মেসেজে বলে ভুল করে আপনার কাছে টাকা গেছে, তারপর ফোন করে ফেরত চায়।",
+  "doEn": "Open your official app and check your balance. Fake SMS can look exactly like the real one.",
+  "doBn": "অফিসিয়াল অ্যাপ খুলে ব্যালেন্স দেখুন। ভুয়া SMS হুবহু আসলের মতো হতে পারে।"
+ },
+ {
+  "en": "Prize or lottery win",
+  "bn": "পুরস্কার বা লটারি জেতা",
+  "signsEn": "You \"won\" something you never entered, and must pay a fee or share details to claim it.",
+  "signsBn": "আপনি এমন কিছু \"জিতেছেন\" যাতে অংশই নেননি, আর পেতে হলে ফি দিতে বা তথ্য দিতে হবে।",
+  "doEn": "Real prizes don't ask you to pay first. Ignore and delete.",
+  "doBn": "আসল পুরস্কারে আগে টাকা দিতে হয় না। উপেক্ষা করে মুছে ফেলুন।"
+ },
+ {
+  "en": "Job or easy income offers",
+  "bn": "চাকরি বা সহজ আয়ের অফার",
+  "signsEn": "Work from home, daily income, \"like videos and earn\", but first a registration fee.",
+  "signsBn": "ঘরে বসে কাজ, দৈনিক আয়, \"ভিডিও লাইক করে আয়\", কিন্তু আগে রেজিস্ট্রেশন ফি।",
+  "doEn": "Don't pay to get a job. Look the company up yourself.",
+  "doBn": "চাকরি পেতে টাকা দেবেন না। প্রতিষ্ঠানটি নিজে খোঁজ নিয়ে দেখুন।"
+ },
+ {
+  "en": "Account will be blocked",
+  "bn": "অ্যাকাউন্ট বন্ধ হয়ে যাবে",
+  "signsEn": "Threatens that your SIM, bank or MFS account will close unless you act now or click a link.",
+  "signsBn": "ভয় দেখায় যে এখনই কিছু না করলে বা লিংকে না গেলে সিম, ব্যাংক বা MFS অ্যাকাউন্ট বন্ধ হবে।",
+  "doEn": "Pressure is the trick. Check in the official app or at a branch.",
+  "doBn": "চাপ দেওয়াটাই কৌশল। অফিসিয়াল অ্যাপে বা শাখায় গিয়ে যাচাই করুন।"
+ },
+ {
+  "en": "Betting and casino links",
+  "bn": "বেটিং ও ক্যাসিনো লিংক",
+  "signsEn": "Bonus offers for betting apps, often over Telegram or WhatsApp, with short links.",
+  "signsBn": "বেটিং অ্যাপের বোনাস অফার, প্রায়ই টেলিগ্রাম বা হোয়াটসঅ্যাপে, শর্ট লিংকসহ।",
+  "doEn": "Online gambling is illegal in Bangladesh and these sites often take deposits and vanish.",
+  "doBn": "বাংলাদেশে অনলাইন জুয়া অবৈধ, আর এসব সাইট প্রায়ই টাকা নিয়ে উধাও হয়।"
+ }
+]
