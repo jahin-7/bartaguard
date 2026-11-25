@@ -75,27 +75,48 @@ enum TextNorm {
 
 // MARK: - Model
 
-public struct LinearModel {
-    struct Block: Decodable { let vocab: [String: Int]; let idf: [Double] }
-    struct Payload: Decodable {
-        let labels: [String]
-        let word: Block
-        let char: Block
-        let word_feature_count: Int
-        let intercept: [Double]
-        let coef: [[String: Double]]
-    }
+public struct LinearModel: Sendable {
+    struct Block: Sendable { let vocab: [String: Int]; let idf: [Float] }
 
     let labels: [String]
     private let word: Block, char: Block
     private let nWord: Int
     private let intercept: [Double]
-    private let coef: [[Int: Double]]
+    /// Dense weights, feature-major: coef[feature * nClasses + k].
+    private let coef: [Float]
 
-    public init(data: Data) throws {
-        let p = try JSONDecoder().decode(Payload.self, from: data)
-        labels = p.labels; word = p.word; char = p.char; nWord = p.word_feature_count; intercept = p.intercept
-        coef = p.coef.map { Dictionary(uniqueKeysWithValues: $0.map { (Int($0.key)!, $0.value) }) }
+    enum FormatError: Error { case badMagic, truncated }
+
+    /// Reads ondevice_model.bin (see ml/src/bartaguard/export_binary.py). Peak memory stays far below the
+    /// JSON route, which matters inside the SMS filter extension.
+    public init(binary d: Data) throws {
+        var o = 0
+        func take(_ n: Int) throws -> Data {
+            guard o + n <= d.count else { throw FormatError.truncated }
+            defer { o += n }
+            return d.subdata(in: (d.startIndex + o)..<(d.startIndex + o + n))
+        }
+        func u32() throws -> Int { Int(try take(4).withUnsafeBytes { $0.loadUnaligned(as: UInt32.self).littleEndian }) }
+        func floats(_ n: Int) throws -> [Float] {
+            try take(n * 4).withUnsafeBytes { r in (0..<n).map { Float(bitPattern: r.loadUnaligned(fromByteOffset: $0 * 4, as: UInt32.self).littleEndian) } }
+        }
+        func lines() throws -> [String] {
+            try take(try u32()).split(separator: 10, omittingEmptySubsequences: false).map { String(decoding: $0, as: UTF8.self) }
+        }
+        guard try take(4) == Data("BGM1".utf8) else { throw FormatError.badMagic }
+        let nk = try u32(), nw = try u32(), nc = try u32()
+        intercept = try take(nk * 8).withUnsafeBytes { r in (0..<nk).map { Double(bitPattern: r.loadUnaligned(fromByteOffset: $0 * 8, as: UInt64.self).littleEndian) } }
+        let idfW = try floats(nw), idfC = try floats(nc)
+        coef = try floats((nw + nc) * nk)
+        labels = try lines()
+        func vocab(_ toks: [String]) -> [String: Int] {
+            var v = [String: Int](minimumCapacity: toks.count)
+            for (i, t) in toks.enumerated() { v[t] = i }
+            return v
+        }
+        word = Block(vocab: vocab(try lines()), idf: idfW)
+        char = Block(vocab: vocab(try lines()), idf: idfC)
+        nWord = nw
     }
 
     /// sublinear tf (1 + ln count) x idf, then L2-normalised, as sklearn's TfidfVectorizer does per block.
@@ -105,7 +126,7 @@ public struct LinearModel {
         var v: [Int: Double] = [:]
         var norm = 0.0
         for (i, c) in counts {
-            let x = (1 + log(Double(c))) * b.idf[i]
+            let x = (1 + log(Double(c))) * Double(b.idf[i])
             v[i + offset] = x
             norm += x * x
         }
@@ -117,7 +138,8 @@ public struct LinearModel {
     public func predictProba(_ text: String) -> [String: Double] {
         var x = tfidf(TextNorm.wordTokens(text), word, offset: 0)
         x.merge(tfidf(TextNorm.charNgrams(text), char, offset: nWord)) { a, _ in a }
-        let scores = (0..<labels.count).map { k in intercept[k] + x.reduce(0) { $0 + (coef[k][$1.key] ?? 0) * $1.value } }
+        let nk = labels.count
+        let scores = (0..<nk).map { k in intercept[k] + x.reduce(0) { $0 + Double(coef[$1.key * nk + k]) * $1.value } }
         let m = scores.max() ?? 0
         let e = scores.map { exp($0 - m) }
         let z = e.reduce(0, +)
@@ -134,9 +156,11 @@ public struct Flag: Identifiable, Hashable {
     public let en: String
     public let bn: String
     public let spans: [Range<String.Index>]
+    /// Set for suspicious links: what the address-only inspection found.
+    public var link: RuleSet.URLInfo? = nil
 }
 
-public struct RuleSet {
+public struct RuleSet: Sendable {
     struct Rule: Decodable { let key: String; let severity: Int; let en: String; let bn: String; let patterns: [String] }
     struct Payload: Decodable {
         let rules: [Rule]
@@ -212,7 +236,7 @@ public struct RuleSet {
             out.append(Flag(key: "suspicious_link", severity: Set(info.flags).subtracting(["not_https"]).isEmpty ? 1 : 2,
                             en: "Link looks suspicious (\(list)). Do not open it; type the official address yourself.",
                             bn: "লিংকটি সন্দেহজনক (\(list))। এটি খুলবেন না; অফিসিয়াল ঠিকানা নিজে টাইপ করুন।",
-                            spans: [span]))
+                            spans: [span], link: info))
         }
         return out.sorted { $0.severity > $1.severity }
     }
@@ -230,7 +254,7 @@ public struct Analysis {
     public let outOfDomain: Bool
 }
 
-public final class BartaGuardEngine {
+public final class BartaGuardEngine: @unchecked Sendable {
     public static let minBanglaShare = 0.5
     public static let minLetters = 12
 
@@ -239,14 +263,14 @@ public final class BartaGuardEngine {
     public let threshold: Double
 
     public init(modelData: Data, rulesData: Data, threshold: Double) throws {
-        model = try LinearModel(data: modelData)
+        model = try LinearModel(binary: modelData)
         rules = try RuleSet(data: rulesData)
         self.threshold = threshold
     }
 
     /// Loads the model and rules bundled with this package.
     public convenience init(threshold: Double = 0.6) throws {
-        guard let m = Bundle.module.url(forResource: "ondevice_model", withExtension: "json"),
+        guard let m = Bundle.module.url(forResource: "ondevice_model", withExtension: "bin"),
               let r = Bundle.module.url(forResource: "redflags_rules", withExtension: "json") else {
             throw CocoaError(.fileNoSuchFile)
         }
@@ -264,6 +288,7 @@ public final class BartaGuardEngine {
 
     public func probabilities(_ text: String) -> [String: Double] { model.predictProba(text) }
     public func flags(_ text: String) -> [Flag] { rules.scan(text) }
+    public func inspect(url: String) -> RuleSet.URLInfo { rules.inspect(url: url) }
 
     public func analyze(_ text: String) -> Analysis {
         let flags = rules.scan(text)

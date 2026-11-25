@@ -12,3 +12,4 @@ ml/artifacts/mac_mps/*/
 apps/ios/BartaGuardCore/.build/
 apps/ios/**/.swiftpm/
 apps/ios/**/xcuserdata/
+apps/ios/build/

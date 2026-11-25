@@ -1,0 +1,640 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03BE4101AB0AF85616982BFB /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7974889FAA8C13F3A67D886E /* Glass.swift */; };
+		1F400081840ABF09AEE2CB09 /* BartaGuardCore in Frameworks */ = {isa = PBXBuildFile; productRef = 8AFB0D033A98FF54CB04773E /* BartaGuardCore */; };
+		20923C4199BE104AE459FA29 /* EngineStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F1399182EA28CB816BDF7 /* EngineStore.swift */; };
+		27026ADC1B679C114B9D474C /* Screens.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7933ADC01F5C043143C669D /* Screens.swift */; };
+		3833BB884B70CC7F9497A37F /* MessageFilter.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B1EA363E9A39583F1EE14A37 /* MessageFilter.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3E22051C52606A339906071D /* IdentityLookup.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A646E040FEAE609E0721FDB5 /* IdentityLookup.framework */; };
+		4F44176E2ECA8C8F106B8654 /* BartaGuardCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1688622D1BC3CBE113EC0F82 /* BartaGuardCore */; };
+		64F6E3AA4B4B7555AD7ECD7D /* MessageFilterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77738192FD9FC1FAB74BEAF /* MessageFilterExtension.swift */; };
+		71ABE000104F63BFAA81F8B6 /* EngineStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F1399182EA28CB816BDF7 /* EngineStore.swift */; };
+		7266D6FFF988DD918057E02D /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306830D4798FEBF408BB8BA /* Strings.swift */; };
+		76B8FA43852D27C7C81C4979 /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7974889FAA8C13F3A67D886E /* Glass.swift */; };
+		7C81F7F18302A7FCD6CBD278 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3A289623F3FB73C9DD6003 /* ShareViewController.swift */; };
+		8D99DC2F54CE512D45E01B3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D8C7B55DD22D35D70F17E73 /* Assets.xcassets */; };
+		A4ADA877368A6471BE8024DE /* BartaGuardCore in Frameworks */ = {isa = PBXBuildFile; productRef = FED7A190597E35F33672CDCD /* BartaGuardCore */; };
+		DBE8B4986606C025F253A310 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCAA62F651800D78E53D54DD /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E658ACB1937C971252F35AB7 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6306830D4798FEBF408BB8BA /* Strings.swift */; };
+		EF6E3327DA1560DBF5C0F455 /* BartaGuardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE5104A4CA9851FF90D7A96 /* BartaGuardApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9133858F1A12FA027D3B6599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A83AFC16E9DCECB7C7080B5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E643553D82C69D4814AD2A7E;
+			remoteInfo = ShareExtension;
+		};
+		F301CEFC919D160968AE6960 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A83AFC16E9DCECB7C7080B5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A8F637A740C6F564CAC7DD14;
+			remoteInfo = MessageFilter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BA5BBF5C4EA0A400B114E7F4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3833BB884B70CC7F9497A37F /* MessageFilter.appex in Embed Foundation Extensions */,
+				DBE8B4986606C025F253A310 /* ShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		08F4A86B43B2AA41560BA49C /* BartaGuard.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BartaGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30D86DEB68D16BDACBA39C43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5D8C7B55DD22D35D70F17E73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6306830D4798FEBF408BB8BA /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		72AC9D8C6DDABBF33F4C9499 /* BartaGuardCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BartaGuardCore; path = BartaGuardCore; sourceTree = SOURCE_ROOT; };
+		7974889FAA8C13F3A67D886E /* Glass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glass.swift; sourceTree = "<group>"; };
+		832F1399182EA28CB816BDF7 /* EngineStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineStore.swift; sourceTree = "<group>"; };
+		A646E040FEAE609E0721FDB5 /* IdentityLookup.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IdentityLookup.framework; path = System/Library/Frameworks/IdentityLookup.framework; sourceTree = SDKROOT; };
+		B1EA363E9A39583F1EE14A37 /* MessageFilter.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = MessageFilter.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3C5F454BC649B239CAFB845 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C77738192FD9FC1FAB74BEAF /* MessageFilterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageFilterExtension.swift; sourceTree = "<group>"; };
+		CAE5104A4CA9851FF90D7A96 /* BartaGuardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BartaGuardApp.swift; sourceTree = "<group>"; };
+		CC3A289623F3FB73C9DD6003 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		E7933ADC01F5C043143C669D /* Screens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screens.swift; sourceTree = "<group>"; };
+		EAC49A7543839BE1CE75D0F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FCAA62F651800D78E53D54DD /* ShareExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		16BCDB9EFC896617207A7E7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F44176E2ECA8C8F106B8654 /* BartaGuardCore in Frameworks */,
+				3E22051C52606A339906071D /* IdentityLookup.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A834CC6C3B050CBC0634EDC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F400081840ABF09AEE2CB09 /* BartaGuardCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8306CAD628DFE97FD7BE861B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4ADA877368A6471BE8024DE /* BartaGuardCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2279999C7234003ED1DC8E7D /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				832F1399182EA28CB816BDF7 /* EngineStore.swift */,
+				7974889FAA8C13F3A67D886E /* Glass.swift */,
+				6306830D4798FEBF408BB8BA /* Strings.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		304BF6EACE98B571E1D7754D = {
+			isa = PBXGroup;
+			children = (
+				438B05EE3F24FE04471B7BBA /* BartaGuard */,
+				A0D3DEF00F8FC7785626F6D4 /* MessageFilter */,
+				A2455FEA0B32828CC211A48D /* Packages */,
+				2279999C7234003ED1DC8E7D /* Shared */,
+				88214E3A45817BA539764104 /* ShareExtension */,
+				998BAF23F41426509201777A /* Frameworks */,
+				8D4B73D52DBF7F7F5B111967 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		438B05EE3F24FE04471B7BBA /* BartaGuard */ = {
+			isa = PBXGroup;
+			children = (
+				5D8C7B55DD22D35D70F17E73 /* Assets.xcassets */,
+				CAE5104A4CA9851FF90D7A96 /* BartaGuardApp.swift */,
+				B3C5F454BC649B239CAFB845 /* Info.plist */,
+				E7933ADC01F5C043143C669D /* Screens.swift */,
+			);
+			path = BartaGuard;
+			sourceTree = "<group>";
+		};
+		88214E3A45817BA539764104 /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				EAC49A7543839BE1CE75D0F5 /* Info.plist */,
+				CC3A289623F3FB73C9DD6003 /* ShareViewController.swift */,
+			);
+			path = ShareExtension;
+			sourceTree = "<group>";
+		};
+		8D4B73D52DBF7F7F5B111967 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				08F4A86B43B2AA41560BA49C /* BartaGuard.app */,
+				B1EA363E9A39583F1EE14A37 /* MessageFilter.appex */,
+				FCAA62F651800D78E53D54DD /* ShareExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		998BAF23F41426509201777A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A646E040FEAE609E0721FDB5 /* IdentityLookup.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A0D3DEF00F8FC7785626F6D4 /* MessageFilter */ = {
+			isa = PBXGroup;
+			children = (
+				30D86DEB68D16BDACBA39C43 /* Info.plist */,
+				C77738192FD9FC1FAB74BEAF /* MessageFilterExtension.swift */,
+			);
+			path = MessageFilter;
+			sourceTree = "<group>";
+		};
+		A2455FEA0B32828CC211A48D /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				72AC9D8C6DDABBF33F4C9499 /* BartaGuardCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		01C2D53D0D42930FFDBB00CA /* BartaGuard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 172E5D276F5E64A9DC3928E3 /* Build configuration list for PBXNativeTarget "BartaGuard" */;
+			buildPhases = (
+				BDF8098A27DEA5A90226997D /* Sources */,
+				F610A35D26C1DEFEC392F7E0 /* Resources */,
+				1A834CC6C3B050CBC0634EDC /* Frameworks */,
+				BA5BBF5C4EA0A400B114E7F4 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B02724CDE88466D9C1F4C37 /* PBXTargetDependency */,
+				D007EE1E0A80757728F20BDF /* PBXTargetDependency */,
+			);
+			name = BartaGuard;
+			packageProductDependencies = (
+				8AFB0D033A98FF54CB04773E /* BartaGuardCore */,
+			);
+			productName = BartaGuard;
+			productReference = 08F4A86B43B2AA41560BA49C /* BartaGuard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A8F637A740C6F564CAC7DD14 /* MessageFilter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2376C811BE24AF3E4090A8C /* Build configuration list for PBXNativeTarget "MessageFilter" */;
+			buildPhases = (
+				CD3E16C6D789D111C5260517 /* Sources */,
+				16BCDB9EFC896617207A7E7E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MessageFilter;
+			packageProductDependencies = (
+				1688622D1BC3CBE113EC0F82 /* BartaGuardCore */,
+			);
+			productName = MessageFilter;
+			productReference = B1EA363E9A39583F1EE14A37 /* MessageFilter.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		E643553D82C69D4814AD2A7E /* ShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4EB6B230497575F0592C28C /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildPhases = (
+				9522E86EDEB2482518010638 /* Sources */,
+				8306CAD628DFE97FD7BE861B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShareExtension;
+			packageProductDependencies = (
+				FED7A190597E35F33672CDCD /* BartaGuardCore */,
+			);
+			productName = ShareExtension;
+			productReference = FCAA62F651800D78E53D54DD /* ShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A83AFC16E9DCECB7C7080B5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					01C2D53D0D42930FFDBB00CA = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					A8F637A740C6F564CAC7DD14 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					E643553D82C69D4814AD2A7E = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 7F33AF22AB468143316EBA45 /* Build configuration list for PBXProject "BartaGuard" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 304BF6EACE98B571E1D7754D;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				89FE839D629B326D95FB73CB /* XCLocalSwiftPackageReference "BartaGuardCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8D4B73D52DBF7F7F5B111967 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				01C2D53D0D42930FFDBB00CA /* BartaGuard */,
+				A8F637A740C6F564CAC7DD14 /* MessageFilter */,
+				E643553D82C69D4814AD2A7E /* ShareExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F610A35D26C1DEFEC392F7E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D99DC2F54CE512D45E01B3F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9522E86EDEB2482518010638 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71ABE000104F63BFAA81F8B6 /* EngineStore.swift in Sources */,
+				03BE4101AB0AF85616982BFB /* Glass.swift in Sources */,
+				7C81F7F18302A7FCD6CBD278 /* ShareViewController.swift in Sources */,
+				E658ACB1937C971252F35AB7 /* Strings.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDF8098A27DEA5A90226997D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF6E3327DA1560DBF5C0F455 /* BartaGuardApp.swift in Sources */,
+				20923C4199BE104AE459FA29 /* EngineStore.swift in Sources */,
+				76B8FA43852D27C7C81C4979 /* Glass.swift in Sources */,
+				27026ADC1B679C114B9D474C /* Screens.swift in Sources */,
+				7266D6FFF988DD918057E02D /* Strings.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD3E16C6D789D111C5260517 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64F6E3AA4B4B7555AD7ECD7D /* MessageFilterExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2B02724CDE88466D9C1F4C37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A8F637A740C6F564CAC7DD14 /* MessageFilter */;
+			targetProxy = F301CEFC919D160968AE6960 /* PBXContainerItemProxy */;
+		};
+		D007EE1E0A80757728F20BDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E643553D82C69D4814AD2A7E /* ShareExtension */;
+			targetProxy = 9133858F1A12FA027D3B6599 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0967F19FBDDE6FA902BC76B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = MessageFilter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashidazraf.bartaguard.messagefilter;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		42E4CB65379E361CE82F09DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		50B438B1FCC8E28BD2EB01D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = BartaGuard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashidazraf.bartaguard;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6FD133D617DC9093913BD84A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = BartaGuard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashidazraf.bartaguard;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A24E0D94621F460B37CE00F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashidazraf.bartaguard.share;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A4FACF90032A0F9C9BF969CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = MessageFilter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashidazraf.bartaguard.messagefilter;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B99598188E04ED7249FF1AF6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FF5760F5DDA1052F7E7F42B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashidazraf.bartaguard.share;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		172E5D276F5E64A9DC3928E3 /* Build configuration list for PBXNativeTarget "BartaGuard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50B438B1FCC8E28BD2EB01D0 /* Debug */,
+				6FD133D617DC9093913BD84A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7F33AF22AB468143316EBA45 /* Build configuration list for PBXProject "BartaGuard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B99598188E04ED7249FF1AF6 /* Debug */,
+				42E4CB65379E361CE82F09DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A4EB6B230497575F0592C28C /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A24E0D94621F460B37CE00F6 /* Debug */,
+				FF5760F5DDA1052F7E7F42B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D2376C811BE24AF3E4090A8C /* Build configuration list for PBXNativeTarget "MessageFilter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4FACF90032A0F9C9BF969CE /* Debug */,
+				0967F19FBDDE6FA902BC76B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		89FE839D629B326D95FB73CB /* XCLocalSwiftPackageReference "BartaGuardCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = BartaGuardCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1688622D1BC3CBE113EC0F82 /* BartaGuardCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BartaGuardCore;
+		};
+		8AFB0D033A98FF54CB04773E /* BartaGuardCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BartaGuardCore;
+		};
+		FED7A190597E35F33672CDCD /* BartaGuardCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BartaGuardCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1A83AFC16E9DCECB7C7080B5 /* Project object */;
+}
