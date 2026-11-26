@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 13 themed icon: the shield outline and check in the system's colour. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="1024" android:viewportHeight="1024">
+    <group android:pivotX="512" android:pivotY="515" android:scaleX="0.72" android:scaleY="0.72">
+        <path android:pathData="M512,170 L800,270 V520 Q800,720 512,860 Q224,720 224,520 V270 Z" android:strokeColor="#FF000000" android:strokeWidth="56" android:strokeLineJoin="round" />
+        <path android:pathData="M420,520 L492,592 L620,456" android:strokeColor="#FF000000" android:strokeWidth="64"
+            android:strokeLineCap="round" android:strokeLineJoin="round" />
+    </group>
+</vector>

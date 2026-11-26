@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14213D"/><stop offset="1" stop-color="#0A1022"/></linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".42" r=".55"><stop offset="0" stop-color="#2BD98B" stop-opacity=".35"/><stop offset="1" stop-color="#2BD98B" stop-opacity="0"/></radialGradient>
+    <linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3BE39A"/><stop offset="1" stop-color="#0FA36B"/></linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#glow)"/>
+  <path fill="url(#sh)" d="M512 170 L790 268 Q800 272 800 283 V520 Q800 720 512 860 Q224 720 224 520 V283 Q224 272 234 268 Z"/>
+  <path fill="#fff" fill-opacity=".14" d="M512 170 L790 268 Q800 272 800 283 V420 Q640 380 512 470 Q384 380 224 420 V283 Q224 272 234 268 Z"/>
+  <text x="512" y="640" text-anchor="middle" font-family="Kohinoor Bangla" font-weight="700" font-size="330" fill="#fff">বা</text>
+</svg>

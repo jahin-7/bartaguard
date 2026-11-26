@@ -1,6 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "@/components/Icons";
 import { type Analysis, Engine, type Flag, type UrlInfo, type Verdict } from "@/lib/engine";
@@ -17,8 +19,10 @@ export default function Home() {
   const [tab, setTab] = useState(0);
   const [engine, setEngine] = useState<Engine | null>(null);
   const [checked, setChecked] = useState<{ text: string; a: Analysis } | null>(null);
+  const [theme, setTheme] = useState("system");
 
-  useEffect(() => { setLang(load("lang")); Engine.load().then(setEngine).catch(() => setEngine(null)); }, []);
+  useEffect(() => { setLang(load("lang")); setTheme(load("theme") ?? "system"); Engine.load().then(setEngine).catch(() => setEngine(null)); }, []);
+  const chooseTheme = (t: string) => { save("theme", t); setTheme(t); applyTheme(t); };
   useEffect(() => { if (lang) document.documentElement.lang = lang; }, [lang]);
 
   const s = S(lang !== "en");
@@ -35,15 +39,15 @@ export default function Home() {
         <>
           <header className="sticky top-0 z-20 px-4 pt-3 lg:pt-5">
             <div className="mx-auto flex max-w-5xl items-center gap-3">
-              <div className="flex items-center gap-2 font-bold text-lg"><span className="text-accent"><Icon name="shieldCheck" className="size-7" /></span>BartaGuard</div>
-              <nav className="glass glass-strong ml-auto hidden rounded-full p-1 lg:flex">
+              <div className="flex items-center gap-2.5 font-bold text-lg"><Image src="/logo.svg" alt="" width={32} height={32} unoptimized className="size-8 rounded-[9px]" />BartaGuard</div>
+              <nav className="bar ml-auto hidden rounded-full p-1 lg:flex">
                 {tabs.map(([icon, label], i) => (
                   <button key={i} onClick={() => setTab(i)} className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${tab === i ? "bg-accent/15 text-accent" : "text-sub hover:text-text"}`}>
                     <Icon name={icon} className="size-4" />{label}
                   </button>
                 ))}
               </nav>
-              <button onClick={() => choose(s.bn ? "en" : "bn")} className="glass ml-auto rounded-full px-4 py-2 text-sm font-semibold lg:ml-2">{s.bn ? "English" : "বাংলা"}</button>
+              <button onClick={() => choose(s.bn ? "en" : "bn")} className="bar ml-auto rounded-full px-4 py-2 text-sm font-semibold lg:ml-2">{s.bn ? "English" : "বাংলা"}</button>
             </div>
           </header>
           <main className="mx-auto max-w-5xl px-4 pb-32 pt-4 lg:pb-16">
@@ -52,12 +56,12 @@ export default function Home() {
                 {tab === 0 && <CheckTab s={s} engine={engine} checked={checked} setChecked={setChecked} />}
                 {tab === 1 && <LinksTab s={s} engine={engine} />}
                 {tab === 2 && <LearnTab s={s} />}
-                {tab === 3 && <AboutTab s={s} />}
+                {tab === 3 && <AboutTab s={s} theme={theme} chooseTheme={chooseTheme} />}
               </motion.div>
             </AnimatePresence>
           </main>
           {/* floating capsule tab bar on phones */}
-          <nav className="glass glass-strong fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 flex rounded-full p-1.5 lg:hidden">
+          <nav className="bar fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 flex rounded-full p-1.5 lg:hidden">
             {tabs.map(([icon, label], i) => (
               <button key={i} onClick={() => setTab(i)} className={`flex flex-1 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-semibold transition ${tab === i ? "bg-accent/15 text-accent" : "text-sub"}`}>
                 <Icon name={icon} className="size-6" />{label}
@@ -70,14 +74,11 @@ export default function Home() {
   );
 }
 
+/** The plain system background; a verdict washes the top of it, so colour always means something. */
 function Backdrop({ tint }: { tint: string | null }) {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="blob" style={{ background: "var(--blob1)", width: "60vmax", height: "60vmax", left: "-15vmax", top: "-20vmax" }} />
-      <div className="blob" style={{ background: "var(--blob2)", width: "55vmax", height: "55vmax", right: "-20vmax", top: "10vh", animationDelay: "-6s" }} />
-      <div className="blob" style={{ background: "var(--blob3)", width: "50vmax", height: "50vmax", left: "-10vmax", bottom: "-20vmax", animationDelay: "-12s" }} />
-      <div className="blob" style={{ background: "var(--blob4)", width: "50vmax", height: "50vmax", right: "-15vmax", bottom: "-25vmax", animationDelay: "-3s" }} />
-      <div className="absolute inset-0 transition-[background] duration-700" style={{ background: tint ? `linear-gradient(180deg, color-mix(in srgb, ${tint} 28%, transparent), transparent 55%)` : "transparent" }} />
+    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+      <div className="absolute inset-0 transition-[background] duration-700" style={{ background: tint ? `linear-gradient(180deg, color-mix(in srgb, ${tint} 18%, transparent), transparent 55%)` : "transparent" }} />
     </div>
   );
 }
@@ -85,7 +86,7 @@ function Backdrop({ tint }: { tint: string | null }) {
 function LanguagePicker({ choose }: { choose: (l: string) => void }) {
   return (
     <div className="mx-auto flex min-h-dvh max-w-sm flex-col items-center justify-center gap-3 px-6 text-center">
-      <div className="glass glass-strong mb-4 grid size-24 place-items-center rounded-full text-accent"><Icon name="shieldCheck" className="size-12" /></div>
+      <Image src="/logo.svg" alt="" width={104} height={104} unoptimized priority className="mb-4 size-26 rounded-[24px] shadow-[0_10px_30px_rgb(0_0_0/0.25)]" />
       <h1 className="text-4xl font-bold tracking-tight">BartaGuard</h1>
       <p className="mb-6 text-sub">বার্তা যাচাই · Check a message before you trust it</p>
       <button className="btn btn-prominent w-full text-lg" onClick={() => choose("bn")}>বাংলা</button>
@@ -320,7 +321,15 @@ function LearnTab({ s }: { s: Strings }) {
 
 // ---------------- About ----------------
 
-function AboutTab({ s }: { s: Strings }) {
+/** "system" follows the device; the stylesheet reads data-theme for an explicit choice. */
+function applyTheme(t: string) {
+  const root = document.documentElement;
+  root.classList.add("theme-fade");
+  if (t === "system") delete root.dataset.theme; else root.dataset.theme = t;
+  setTimeout(() => root.classList.remove("theme-fade"), 450);
+}
+
+function AboutTab({ s, theme, chooseTheme }: { s: Strings; theme: string; chooseTheme: (t: string) => void }) {
   const rows: [string, string][] = [
     [s.t("Scams flagged as suspicious", "প্রতারণাকে সন্দেহজনক বলেছে"), "90%"],
     [s.t("Scams wrongly called safe", "প্রতারণাকে ভুল করে নিরাপদ বলেছে"), "2%"],
@@ -330,6 +339,12 @@ function AboutTab({ s }: { s: Strings }) {
   return (
     <div className="grid max-w-3xl gap-4">
       <Title title={s.t("About BartaGuard", "BartaGuard সম্পর্কে")} />
+      <div className="px-2 text-xs font-semibold uppercase tracking-wide text-faint">{s.t("Appearance", "থিম")}</div>
+      <div className="segmented max-w-md">
+        {([["system", s.t("Automatic", "অটো")], ["light", s.t("Light", "লাইট")], ["dark", s.t("Dark", "ডার্ক")]] as const).map(([k, label]) => (
+          <button key={k} aria-pressed={theme === k} onClick={() => chooseTheme(k)}>{label}</button>
+        ))}
+      </div>
       <section className="glass rounded-[28px] p-5">
         <div className="font-semibold">{s.t("Private by design", "শুরু থেকেই গোপনীয়")}</div>
         <p className="mt-1 text-sub">{s.t("The checker and the screenshot reader both run in your browser. No account, no tracking, and your messages are never sent to a server.", "যাচাই আর স্ক্রিনশট পড়া দুটোই আপনার ব্রাউজারে চলে। কোনো অ্যাকাউন্ট বা ট্র্যাকিং নেই, আর আপনার মেসেজ কখনো সার্ভারে পাঠানো হয় না।")}</p>
@@ -343,6 +358,7 @@ function AboutTab({ s }: { s: Strings }) {
         <p className="mt-3 text-sm text-faint">{s.t("It was trained on Bangla text, so English and Banglish messages only get the warning-sign checks. Treat it as a second opinion, not a guarantee.", "এটি বাংলা লেখায় প্রশিক্ষিত, তাই ইংরেজি ও বাংলিশ মেসেজে শুধু সতর্কসংকেত যাচাই হয়। এটিকে দ্বিতীয় মতামত হিসেবে নিন, নিশ্চয়তা হিসেবে নয়।")}</p>
       </section>
       <section className="glass rounded-[28px] p-5 text-sm text-sub">
+        <Link href="/privacy" className="mb-2 block font-semibold text-accent">{s.t("Privacy policy →", "গোপনীয়তা নীতি →")}</Link>
         {s.t("Training data: BTTC, a Bangla tri-class text corpus (Tahmid et al., 2026, CC BY 4.0, doi:10.17632/5wrm959d6f.1).", "প্রশিক্ষণ ডেটা: BTTC, বাংলা তিন-শ্রেণির টেক্সট কর্পাস (Tahmid et al., 2026, CC BY 4.0, doi:10.17632/5wrm959d6f.1)।")}
       </section>
     </div>

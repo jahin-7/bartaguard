@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9F7F1"/><stop offset="1" stop-color="#CFE9DF"/></linearGradient>
+    <linearGradient id="sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22C77E"/><stop offset="1" stop-color="#0A7F5A"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".78"/><stop offset="1" stop-color="#fff" stop-opacity=".42"/></linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity=".2"/></linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#0A5C40" flood-opacity=".28"/></filter>
+    <clipPath id="b"><path d="M300 330 Q300 260 370 260 H720 Q790 260 790 330 V560 Q790 630 720 630 H520 L420 720 L436 630 H370 Q300 630 300 560 Z"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- shield behind -->
+  <path filter="url(#ds)" fill="url(#sh)" d="M400 300 L620 222 L840 300 V500 Q840 660 620 770 Q400 660 400 500 Z" transform="translate(-170 40)"/>
+  <!-- frosted glass bubble in front: blurred copy of the shield, clipped -->
+  <g clip-path="url(#b)">
+    <path filter="url(#blur)" fill="url(#sh)" d="M400 300 L620 222 L840 300 V500 Q840 660 620 770 Q400 660 400 500 Z" transform="translate(-170 40)"/>
+  </g>
+  <path filter="url(#ds)" fill="url(#glass)" d="M300 330 Q300 260 370 260 H720 Q790 260 790 330 V560 Q790 630 720 630 H520 L420 720 L436 630 H370 Q300 630 300 560 Z"/>
+  <path fill="none" stroke="url(#rim)" stroke-width="5" d="M300 330 Q300 260 370 260 H720 Q790 260 790 330 V560 Q790 630 720 630 H520 L420 720 L436 630 H370 Q300 630 300 560 Z"/>
+  <path d="M440 446 L512 518 L650 380" fill="none" stroke="#0A8F60" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

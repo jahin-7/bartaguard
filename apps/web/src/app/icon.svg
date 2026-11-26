@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E1E23"/><stop offset="1" stop-color="#0A0A0C"/></linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF8A1F" stop-opacity=".22"/><stop offset="1" stop-color="#FF8A1F" stop-opacity="0"/></radialGradient>
+    <linearGradient id="or" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB627"/><stop offset="1" stop-color="#F2650F"/></linearGradient>
+    <linearGradient id="hi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".30"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="cp"><path d="M512 170 L800 270 V520 Q800 720 512 860 Q224 720 224 520 V270 Z"/></clipPath>
+    <filter id="ck" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#5A2200" flood-opacity=".45"/></filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="512" cy="515" r="470" fill="url(#glow)"/>
+  <path fill="url(#or)" d="M512 170 L800 270 V520 Q800 720 512 860 Q224 720 224 520 V270 Z"/>
+  <g clip-path="url(#cp)">
+    <g fill="#141417">
+      <path d="M224 330 Q330 350 392 420 Q320 405 224 410 Z"/>
+      <path d="M224 500 Q340 500 420 560 Q330 565 224 590 Z"/>
+      <path d="M250 690 Q350 660 430 690 Q350 715 290 760 Z"/>
+      <path d="M800 330 Q694 350 632 420 Q704 405 800 410 Z"/>
+      <path d="M800 500 Q684 500 604 560 Q694 565 800 590 Z"/>
+      <path d="M774 690 Q674 660 594 690 Q674 715 734 760 Z"/>
+      <path d="M512 196 Q482 260 512 334 Q542 260 512 196 Z"/>
+    </g>
+    <path fill="url(#hi)" d="M224 170 H800 V400 Q512 330 224 400 Z"/>
+  </g>
+  <path filter="url(#ck)" d="M420 520 L492 592 L620 456" fill="none" stroke="#fff" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

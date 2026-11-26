@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B1B1F"/><stop offset="1" stop-color="#0B0B0D"/></linearGradient>
+    <linearGradient id="or" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB020"/><stop offset="1" stop-color="#F26A0F"/></linearGradient>
+    <clipPath id="cp"><path d="M512 170 L800 270 V520 Q800 720 512 860 Q224 720 224 520 V270 Z"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <path fill="url(#or)" d="M512 170 L800 270 V520 Q800 720 512 860 Q224 720 224 520 V270 Z"/>
+  <!-- Bengal tiger stripes, mirrored -->
+  <g clip-path="url(#cp)" fill="#16161A">
+    <path d="M224 330 Q330 350 392 420 Q320 405 224 410 Z"/>
+    <path d="M224 500 Q340 500 420 560 Q330 565 224 590 Z"/>
+    <path d="M250 690 Q350 660 430 690 Q350 715 290 760 Z"/>
+    <path d="M800 330 Q694 350 632 420 Q704 405 800 410 Z"/>
+    <path d="M800 500 Q684 500 604 560 Q694 565 800 590 Z"/>
+    <path d="M774 690 Q674 660 594 690 Q674 715 734 760 Z"/>
+    <path d="M512 200 Q480 260 512 330 Q544 260 512 200 Z"/>
+  </g>
+  <path d="M420 520 L492 592 L620 456" fill="none" stroke="#fff" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
