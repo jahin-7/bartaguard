@@ -13,3 +13,8 @@ apps/ios/BartaGuardCore/.build/
 apps/ios/**/.swiftpm/
 apps/ios/**/xcuserdata/
 apps/ios/build/
+
+# release signing keys: never commit
+*.jks
+*.keystore
+keystore.properties
