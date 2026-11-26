@@ -81,7 +81,7 @@ RULES = [
          "Creates urgency (\"now\", \"within 24 hours\", \"last chance\"). Slow down and verify.",
          "তাড়াহুড়ো তৈরি করছে (\"এখনই\", \"২৪ ঘণ্টার মধ্যে\", \"শেষ সুযোগ\")। ধীরে যাচাই করুন।",
          (r"\b(urgent|immediately|right now|last chance|within \d+ (hours?|minutes?)|expires? today)\b",
-          r"(জরুরি|অবিলম্বে|শেষ সুযোগ|\d+\s*ঘণ্টার মধ্যে|এখনই\s*(\S+\s*){0,2}(না হলে|নইলে))",
+          r"(জরুরি|অবিলম্বে|শেষ সুযোগ|\d{1,3}\s*ঘণ্টার মধ্যে|এখনই\s*(\S+\s*){0,2}(না হলে|নইলে))",
           r"\b(ekhoni|joruri|druto)\b")),
     Rule("impersonation", 1,
          "Uses the name of a bank, mobile financial service, telecom or government office. Check it through official channels.",
