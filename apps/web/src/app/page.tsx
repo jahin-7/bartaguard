@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { Icon } from "@/components/Icons";
 import { type Analysis, Engine, type Flag, type UrlInfo, type Verdict } from "@/lib/engine";
 import { GUIDES, S, type Strings } from "@/lib/strings";
@@ -12,22 +12,33 @@ const VC: Record<Verdict, string> = { suspicious: "var(--danger)", uncertain: "v
 const VI: Record<Verdict, string> = { suspicious: "warning", uncertain: "question", promotional: "megaphone", normal: "check" };
 
 function load(key: string) { try { return localStorage.getItem(key); } catch { return null; } }
-function save(key: string, v: string) { try { localStorage.setItem(key, v); } catch { /* private mode */ } }
+
+// Saved choices (language, theme) read through useSyncExternalStore: the first client render
+// already has them, and the server render gets `undefined` ("not known yet").
+const storeListeners = new Set<() => void>();
+function save(key: string, v: string) {
+  try { localStorage.setItem(key, v); } catch { /* private mode */ }
+  storeListeners.forEach((l) => l());
+}
+function subscribeStore(l: () => void) { storeListeners.add(l); return () => { storeListeners.delete(l); }; }
+function useStored(key: string): string | null | undefined {
+  return useSyncExternalStore(subscribeStore, () => load(key), () => undefined);
+}
 
 export default function Home() {
-  const [lang, setLang] = useState<string | null | undefined>(undefined);
+  const lang = useStored("lang");
   const [tab, setTab] = useState(0);
   const [engine, setEngine] = useState<Engine | null>(null);
   const [checked, setChecked] = useState<{ text: string; a: Analysis } | null>(null);
-  const [theme, setTheme] = useState("system");
+  const theme = useStored("theme") ?? "system";
 
-  useEffect(() => { setLang(load("lang")); setTheme(load("theme") ?? "system"); Engine.load().then(setEngine).catch(() => setEngine(null)); }, []);
-  const chooseTheme = (t: string) => { save("theme", t); setTheme(t); applyTheme(t); };
+  useEffect(() => { Engine.load().then(setEngine).catch(() => setEngine(null)); }, []);
+  const chooseTheme = (t: string) => { save("theme", t); applyTheme(t); };
   useEffect(() => { if (lang) document.documentElement.lang = lang; }, [lang]);
 
   const s = S(lang !== "en");
   const tint = tab === 0 && checked ? VC[checked.a.verdict] : null;
-  const choose = (l: string) => { save("lang", l); setLang(l); };
+  const choose = (l: string) => save("lang", l);
   const tabs: [string, string][] = [["shieldCheck", s.t("Check", "যাচাই")], ["link", s.t("Links", "লিংক")], ["book", s.t("Learn", "জানুন")], ["info", s.t("About", "সম্পর্কে")]];
 
   return (
