@@ -3,6 +3,25 @@
     <!-- No INTERNET permission: every check runs on the phone. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Android 11+ hides other apps by default. Without these the watcher can't find the default
+         SMS app or show "WhatsApp" instead of "com.whatsapp" in a warning. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto" />
+        </intent>
+        <package android:name="com.google.android.apps.messaging" />
+        <package android:name="com.samsung.android.messaging" />
+        <package android:name="com.android.mms" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="com.facebook.orca" />
+        <package android:name="com.facebook.mlite" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="com.imo.android.imoim" />
+        <package android:name="com.viber.voip" />
+    </queries>
+
     <application
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"

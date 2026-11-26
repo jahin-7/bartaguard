@@ -495,12 +495,24 @@ fun SettingsScreen(vm: AppViewModel, s: Strings, scroll: ScrollState) {
                     vm.setWatching(true)
                     if (Build.VERSION.SDK_INT >= 33) notifPerm.launch(Manifest.permission.POST_NOTIFICATIONS)
                     WatchService.ensureChannel(ctx, s.bn)
-                    if (!vm.access) ctx.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                    if (!vm.access) openListenerSettings(ctx)
                 } else vm.setWatching(false)
             }
             AnimatedVisibility(vm.watch && !vm.access, enter = expandVertically(Springs.smooth()) + fadeIn(), exit = shrinkVertically(Springs.smooth()) + fadeOut()) {
-                Text(s.t("Allow BartaGuard under Notification access, then come back.", "নোটিফিকেশন অ্যাক্সেসে BartaGuard-কে অনুমতি দিন, তারপর ফিরে আসুন।"),
-                    color = P.warn, fontSize = 13.sp, modifier = Modifier.padding(top = 10.dp))
+                Column(Modifier.padding(top = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(s.t("Allow BartaGuard under Notification access, then come back.", "নোটিফিকেশন অ্যাক্সেসে BartaGuard-কে অনুমতি দিন, তারপর ফিরে আসুন।"),
+                        color = P.warn, fontSize = 13.sp)
+                    // Android 13+ greys out notification access for apps installed outside Play until
+                    // "Allow restricted settings" is chosen on the app's info page.
+                    if (Build.VERSION.SDK_INT >= 33) Text(
+                        s.t("Switch greyed out? Tap here → ⋮ → Allow restricted settings, then try again.",
+                            "সুইচ ধূসর? এখানে চাপুন → ⋮ → Allow restricted settings, তারপর আবার চেষ্টা করুন।"),
+                        color = P.accent, fontSize = 13.sp,
+                        modifier = Modifier.pressable {
+                            ctx.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.fromParts("package", ctx.packageName, null)))
+                        },
+                    )
+                }
             }
         }
 
@@ -549,3 +561,15 @@ private fun ToggleRow(title: String, sub: String, on: Boolean, set: (Boolean) ->
 }
 
 // endregion
+
+/** Android 11+ can jump straight to BartaGuard's own switch; older versions get the full list. */
+private fun openListenerSettings(ctx: Context) {
+    val direct = Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS)
+        .putExtra(Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME,
+            android.content.ComponentName(ctx, bd.bartaguard.WatchService::class.java).flattenToString())
+    try {
+        ctx.startActivity(if (Build.VERSION.SDK_INT >= 30) direct else Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+    } catch (e: android.content.ActivityNotFoundException) {
+        ctx.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+    }
+}
