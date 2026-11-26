@@ -33,12 +33,18 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "P
 
 # Small in-memory rate limit: 60 requests per minute per client address.
 _hits: dict[str, deque] = defaultdict(deque)
+_swept = [time.monotonic()]
 
 
 @app.middleware("http")
 async def rate_limit(request: Request, call_next):
     ip = request.client.host if request.client else "?"
     q, now = _hits[ip], time.monotonic()
+    # Once a minute, forget clients with no recent requests so the table can't grow without bound.
+    if now - _swept[0] > 60:
+        _swept[0] = now
+        for k in [k for k, v in _hits.items() if k != ip and (not v or now - v[-1] > 60)]:
+            del _hits[k]
     while q and now - q[0] > 60:
         q.popleft()
     if len(q) >= 60:
