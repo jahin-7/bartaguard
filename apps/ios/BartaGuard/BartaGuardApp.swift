@@ -87,6 +87,16 @@ struct RootView: View {
                 }
             }
         }
+        // Launch argument for screenshots and UI tests: -checkText "…" opens with that message checked.
+        .task {
+            if let t = UserDefaults.standard.string(forKey: "checkText"), !t.isEmpty { m.input = t; m.check() }
+        }
+        // bartaguard://check?text=… opens straight into a check (handy for links and shortcuts).
+        .onOpenURL { url in
+            guard url.host == "check", let t = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "text" })?.value, !t.isEmpty else { return }
+            m.tab = 0; m.input = t; m.check()
+        }
         .sheet(isPresented: $m.showFilterSetup) { FilterSetupSheet().environment(m).preferredColorScheme(m.scheme) }
         .preferredColorScheme(m.scheme)
         .animation(.easeInOut(duration: 0.4), value: m.appearance)

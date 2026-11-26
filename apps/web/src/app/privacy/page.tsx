@@ -69,7 +69,7 @@ export default function Privacy() {
 
       <Section title="Changes and contact">
         <p>If this policy changes, we will update the date at the top of this page.</p>
-        <p>Questions: <span className="font-semibold text-text">[contact email]</span></p>
+        <p>Questions: <a href="mailto:vistasverbose@gmail.com" className="font-semibold text-accent">vistasverbose@gmail.com</a></p>
       </Section>
     </main>
   );
