@@ -105,24 +105,30 @@ fun Modifier.appear(index: Int = 0, key: Any? = Unit, distance: Float = 36f): Mo
  * content with growing resistance; letting go (or flinging into an edge) springs it back.
  * Android's own stretch overscroll is switched off where this is used.
  */
-class RubberBand(private val scope: CoroutineScope) : NestedScrollConnection {
+class RubberBand(private val scope: CoroutineScope, private val limit: Float) : NestedScrollConnection {
     var offset by mutableFloatStateOf(0f)
         private set
+    /** How far the finger has pulled past the edge; [offset] is this squashed through [band]. */
+    private var pull = 0f
     private var settle: Job? = null
 
-    private fun resist(delta: Float): Float {
-        val k = 1f - (abs(offset) / 900f).coerceAtMost(0.85f)
-        return delta * 0.5f * k
+    // UIScrollView's curve: tracks the finger at first, then flattens towards [limit], so a long
+    // drag on a short page can't drag the whole screen away and then snap back.
+    private fun band(x: Float): Float {
+        val a = abs(x)
+        return Math.copySign(limit * (1f - 1f / (a * 0.55f / limit + 1f)), x)
     }
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        if (offset == 0f || source != NestedScrollSource.UserInput) return Offset.Zero
+        if (pull == 0f || source != NestedScrollSource.UserInput) return Offset.Zero
         // Pulling back towards rest eats the stretch first.
-        if ((offset > 0f && available.y < 0f) || (offset < 0f && available.y > 0f)) {
+        if ((pull > 0f && available.y < 0f) || (pull < 0f && available.y > 0f)) {
             settle?.cancel()
-            val next = offset + available.y
-            val used = if ((offset > 0f) == (next > 0f)) available.y else -offset
-            offset = if ((offset > 0f) == (next > 0f)) next else 0f
+            val next = pull + available.y
+            val crossed = (pull > 0f) != (next > 0f)
+            val used = if (crossed) -pull else available.y
+            pull = if (crossed) 0f else next
+            offset = band(pull)
             return Offset(0f, used)
         }
         return Offset.Zero
@@ -131,26 +137,34 @@ class RubberBand(private val scope: CoroutineScope) : NestedScrollConnection {
     override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
         if (source != NestedScrollSource.UserInput || available.y == 0f) return Offset.Zero
         settle?.cancel()
-        offset += resist(available.y)
+        if (pull == 0f && offset != 0f) pull = unband(offset) // grabbed mid-settle
+        pull += available.y
+        offset = band(pull)
         return Offset(0f, available.y)
+    }
+
+    private fun unband(y: Float): Float {
+        val a = abs(y).coerceAtMost(limit * 0.99f)
+        return Math.copySign((limit / (1f - a / limit) - limit) / 0.55f, y)
     }
 
     override suspend fun onPreFling(available: Velocity): Velocity {
         if (offset == 0f) return Velocity.Zero
-        springBack(available.y)
+        springBack(available.y.coerceIn(-2500f, 2500f) * 0.2f)
         return available
     }
 
     override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-        // A fling that hits the edge: carry its momentum into a small overshoot and back.
-        if (abs(available.y) > 50f) springBack(available.y * 0.35f)
+        // A fling that hits the edge: a small, capped overshoot and back.
+        if (abs(available.y) > 50f) springBack(available.y.coerceIn(-3000f, 3000f) * 0.18f)
         return available
     }
 
     private fun springBack(velocity: Float) {
         settle?.cancel()
+        pull = 0f
         settle = scope.launch {
-            animate(offset, 0f, velocity, spring(dampingRatio = 1f, stiffness = Spring.StiffnessMediumLow)) { v, _ -> offset = v }
+            animate(offset, 0f, velocity, spring(dampingRatio = 1f, stiffness = 190f)) { v, _ -> offset = v }
         }
     }
 }
@@ -158,7 +172,8 @@ class RubberBand(private val scope: CoroutineScope) : NestedScrollConnection {
 @androidx.compose.runtime.Composable
 fun rememberRubberBand(): RubberBand {
     val scope = rememberCoroutineScope()
-    return remember { RubberBand(scope) }
+    val limit = with(androidx.compose.ui.platform.LocalDensity.current) { 140.dp.toPx() }
+    return remember { RubberBand(scope, limit) }
 }
 
 /**
