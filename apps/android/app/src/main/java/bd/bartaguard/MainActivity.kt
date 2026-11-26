@@ -55,6 +55,7 @@ import bd.bartaguard.ui.screens.LanguageScreen
 import bd.bartaguard.ui.screens.LearnScreen
 import bd.bartaguard.ui.screens.LinksScreen
 import bd.bartaguard.ui.screens.SettingsScreen
+import bd.bartaguard.ui.screens.SetupSheet
 import bd.bartaguard.ui.screens.screenTitle
 import bd.bartaguard.ui.verdictColor
 import dev.chrisbanes.haze.HazeState
@@ -142,6 +143,8 @@ class MainActivity : ComponentActivity() {
                             // Tapping the current tab scrolls back to the top, as on iPhone.
                             if (it == vm.tab) scope.launch { scrolls[it].animateScrollTo(0, Springs.smooth()) } else vm.tab = it
                         }
+
+                        SetupSheet(vm, s)
                     }
                 }
             }

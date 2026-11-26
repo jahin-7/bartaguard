@@ -32,8 +32,9 @@ struct LanguageView: View {
     var body: some View {
         VStack(spacing: 14) {
             Spacer()
-            Image(systemName: "checkmark.shield.fill").font(.system(size: 46)).foregroundStyle(.blue)
-                .frame(width: 96, height: 96).glassCard(radius: 48)
+            Image("Logo").resizable().frame(width: 104, height: 104)
+                .clipShape(.rect(cornerRadius: 24, style: .continuous))
+                .shadow(color: .black.opacity(0.25), radius: 18, y: 8)
             Text("BartaGuard").font(.system(size: 34, weight: .bold)).padding(.top, 10)
             Text("বার্তা যাচাই · Check a message before you trust it").font(.subheadline).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center).padding(.bottom, 22)
@@ -93,7 +94,7 @@ struct CheckView: View {
 
                 tip("message.badge.filled.fill", l.t("Unknown senders' SMS are checked automatically", "অচেনা নম্বরের SMS নিজে থেকেই যাচাই হয়"),
                     l.t("Turn on BartaGuard as your SMS filter in Settings. Likely scams go to the Junk folder.", "সেটিংসে BartaGuard-কে SMS ফিল্টার হিসেবে চালু করুন। সম্ভাব্য প্রতারণা জাঙ্ক ফোল্ডারে যাবে।"))
-                    .onTapGesture { m.tab = 3 }
+                    .contentShape(.rect).onTapGesture { m.showFilterSetup = true }
                 tip("square.and.arrow.up", l.t("WhatsApp, Messenger, imo…", "হোয়াটসঅ্যাপ, মেসেঞ্জার, imo…"),
                     l.t("Long-press a message → Share → BartaGuard. The check opens right there.", "মেসেজ চেপে ধরুন → শেয়ার → BartaGuard। সেখানেই যাচাই দেখাবে।"))
             }
@@ -211,18 +212,18 @@ struct SettingsView: View {
             Picker("", selection: Binding(get: { m.lang ?? "bn" }, set: { m.lang = $0 })) {
                 Text("বাংলা").tag("bn"); Text("English").tag("en")
             }
-            .pickerStyle(.segmented).padding(6).glassCard(radius: 20)
+            .pickerStyle(.segmented)
 
             section(l.t("Appearance", "থিম"))
             Picker("", selection: $m.appearance) {
                 Text(l.t("Automatic", "অটো")).tag("system"); Text(l.t("Light", "লাইট")).tag("light"); Text(l.t("Dark", "ডার্ক")).tag("dark")
             }
-            .pickerStyle(.segmented).padding(6).glassCard(radius: 20)
+            .pickerStyle(.segmented)
 
             section(l.t("Automatic SMS checking", "স্বয়ংক্রিয় SMS যাচাই"))
             VStack(alignment: .leading, spacing: 10) {
                 Text(l.t("Turn on the SMS filter", "SMS ফিল্টার চালু করুন")).font(.headline)
-                ForEach(Array(steps(l).enumerated()), id: \.offset) { i, s in
+                ForEach(Array(filterSteps(l).enumerated()), id: \.offset) { i, s in
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
                         Text(l.n(i + 1)).font(.subheadline.bold()).foregroundStyle(.blue).frame(width: 18)
                         Text(s).font(.subheadline)
@@ -276,13 +277,64 @@ struct SettingsView: View {
         }
     }
 
-    private func steps(_ l: L) -> [String] {
-        [l.t("Open the Settings app → Apps → Messages.", "সেটিংস অ্যাপ খুলুন → Apps → Messages।"),
-         l.t("Tap Unknown & Spam (Text Message Filter on older iOS).", "Unknown & Spam-এ চাপুন (পুরনো iOS-এ Text Message Filter)।"),
-         l.t("Choose BartaGuard.", "BartaGuard বেছে নিন।")]
-    }
-
     private func section(_ s: String) -> some View {
         Text(s.uppercased()).font(.caption.weight(.semibold)).foregroundStyle(.secondary).padding(.leading, 8).padding(.top, 8)
+    }
+}
+
+func filterSteps(_ l: L) -> [String] {
+    [l.t("Open the Settings app → Apps → Messages.", "সেটিংস অ্যাপ খুলুন → Apps → Messages।"),
+     l.t("Tap Unknown & Spam (Text Message Filter on older iOS).", "Unknown & Spam-এ চাপুন (পুরনো iOS-এ Text Message Filter)।"),
+     l.t("Choose BartaGuard.", "BartaGuard বেছে নিন।")]
+}
+
+// MARK: - Setup sheet
+
+/// The SMS filter steps as a sheet. iOS doesn't tell apps whether their filter is on, so these
+/// are instructions, not a live checklist.
+struct FilterSetupSheet: View {
+    @Environment(AppModel.self) private var m
+    @Environment(\.dismiss) private var dismiss
+    @State private var shown = false
+
+    var body: some View {
+        let l = m.l
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(spacing: 12) {
+                Image(systemName: "message.badge.filled.fill").font(.title).foregroundStyle(.blue)
+                    .symbolEffect(.bounce, value: shown)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(l.t("Check SMS automatically", "SMS নিজে থেকেই যাচাই")).font(.title2.bold())
+                    Text(l.t("Likely scams from unknown numbers go to Junk.", "অচেনা নম্বরের সম্ভাব্য প্রতারণা জাঙ্কে যাবে।"))
+                        .font(.subheadline).foregroundStyle(.secondary)
+                }
+            }
+            VStack(alignment: .leading, spacing: 14) {
+                ForEach(Array(filterSteps(l).enumerated()), id: \.offset) { i, s in
+                    HStack(alignment: .firstTextBaseline, spacing: 12) {
+                        Text(l.n(i + 1)).font(.subheadline.bold()).foregroundStyle(.white)
+                            .frame(width: 26, height: 26).background(.blue, in: .circle)
+                        Text(s).font(.body)
+                    }
+                    .opacity(shown ? 1 : 0).offset(y: shown ? 0 : 12)
+                    .animation(.spring(duration: 0.5, bounce: 0.3).delay(0.08 * Double(i) + 0.1), value: shown)
+                }
+            }
+            Text(l.t("Nothing is sent anywhere. iPhone only shows filters SMS from numbers not in your contacts.",
+                     "কিছুই কোথাও পাঠানো হয় না। আইফোন ফিল্টারকে শুধু কন্টাক্টের বাইরের নম্বরের SMS দেখায়।"))
+                .font(.footnote).foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+            Button { if let u = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(u) } } label: {
+                Label(l.t("Open Settings", "সেটিংস খুলুন"), systemImage: "gear").frame(maxWidth: .infinity).padding(.vertical, 4)
+            }
+            .glassButton(prominent: true).controlSize(.large)
+            Button { dismiss() } label: { Text(l.t("Later", "পরে করব")).frame(maxWidth: .infinity).padding(.vertical, 4) }
+                .glassButton().controlSize(.large)
+        }
+        .padding(24).padding(.top, 8)
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
+        .sensoryFeedback(.impact(weight: .light), trigger: shown)
+        .onAppear { shown = true }
     }
 }

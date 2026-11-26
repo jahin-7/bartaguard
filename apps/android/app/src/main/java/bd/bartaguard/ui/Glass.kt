@@ -2,16 +2,11 @@ package bd.bartaguard.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -81,16 +76,14 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 
-// "Liquid Glass" in Compose: translucent, softly lit layers floating over a slow colour field.
-// The bars (tab bar, top edge) blur what scrolls under them for real on Android 12+ (Haze);
-// the cards sit on the colour field, which is already soft, so they use a frosted tint, a
-// specular sheen and a rim that follow the phone's tilt.
+// Apple's grouped look in Compose: plain system grey (black in dark mode) with solid cards on it,
+// and glass only where iOS uses it, on the bars, which blur what scrolls under them for real on
+// Android 12+ (Haze). Colour comes only from the verdict washing the top of the screen.
 
 @Immutable
 data class Palette(
     val dark: Boolean,
     val bg: Color,
-    val blobs: List<Color>,
     val glass: Color,
     val glassStrong: Color,
     val rimTop: Color,
@@ -108,21 +101,19 @@ data class Palette(
 )
 
 private val Light = Palette(
-    dark = false, bg = Color(0xFFEFF2F8),
-    blobs = listOf(Color(0xFF9DC4FF), Color(0xFFFFC7A8), Color(0xFFB9F1D9), Color(0xFFD9C4FF)),
-    glass = Color.White.copy(alpha = 0.55f), glassStrong = Color.White.copy(alpha = 0.78f),
-    rimTop = Color.White.copy(alpha = 0.95f), rimBottom = Color.White.copy(alpha = 0.25f),
-    text = Color(0xFF0B0D12), sub = Color(0xFF4A505C), faint = Color(0xFF8A90A0),
+    dark = false, bg = Color(0xFFF2F2F7),
+    glass = Color.White, glassStrong = Color.White,
+    rimTop = Color.Black.copy(alpha = 0.05f), rimBottom = Color.Black.copy(alpha = 0.05f),
+    text = Color(0xFF000000), sub = Color(0xFF3C3C43).copy(alpha = 0.75f), faint = Color(0xFF8E8E93),
     accent = Color(0xFF0A84FF), danger = Color(0xFFFF3B30), warn = Color(0xFFFF9500), info = Color(0xFF0A84FF), ok = Color(0xFF34C759),
     thumb = Color.White, switchOff = Color(0xFFE3E3E8),
 )
 
 private val Dark = Palette(
-    dark = true, bg = Color(0xFF07090F),
-    blobs = listOf(Color(0xFF1E4DB7), Color(0xFF7A2F6B), Color(0xFF0F6E5C), Color(0xFF4B2FA8)),
-    glass = Color.White.copy(alpha = 0.09f), glassStrong = Color.White.copy(alpha = 0.16f),
-    rimTop = Color.White.copy(alpha = 0.35f), rimBottom = Color.White.copy(alpha = 0.06f),
-    text = Color(0xFFF5F7FB), sub = Color(0xFFB6BCC9), faint = Color(0xFF7D8494),
+    dark = true, bg = Color(0xFF000000),
+    glass = Color(0xFF1C1C1E), glassStrong = Color(0xFF2C2C2E),
+    rimTop = Color.White.copy(alpha = 0.08f), rimBottom = Color.White.copy(alpha = 0.03f),
+    text = Color(0xFFFFFFFF), sub = Color(0xFFEBEBF5).copy(alpha = 0.6f), faint = Color(0xFF8E8E93),
     accent = Color(0xFF409CFF), danger = Color(0xFFFF453A), warn = Color(0xFFFF9F0A), info = Color(0xFF409CFF), ok = Color(0xFF30D158),
     thumb = Color(0xFF636366), switchOff = Color(0xFF39393D),
 )
@@ -136,7 +127,7 @@ fun GlassTheme(dark: Boolean, content: @Composable () -> Unit) {
     val t = if (dark) Dark else Light
     @Composable fun a(c: Color, l: String) = animateColorAsState(c, tween(500), label = l).value
     val p = Palette(
-        dark = dark, bg = a(t.bg, "bg"), blobs = t.blobs.mapIndexed { i, c -> a(c, "blob$i") },
+        dark = dark, bg = a(t.bg, "bg"),
         glass = a(t.glass, "glass"), glassStrong = a(t.glassStrong, "glassStrong"), rimTop = a(t.rimTop, "rimTop"), rimBottom = a(t.rimBottom, "rimBottom"),
         text = a(t.text, "text"), sub = a(t.sub, "sub"), faint = a(t.faint, "faint"), accent = a(t.accent, "accent"),
         danger = a(t.danger, "danger"), warn = a(t.warn, "warn"), info = a(t.info, "info"), ok = a(t.ok, "ok"),
@@ -152,39 +143,24 @@ fun Palette.verdictColor(v: Verdict) = when (v) {
     Verdict.NORMAL -> ok
 }
 
-/** The slow-moving colour field everything floats on. It drifts with tilt for a little depth. */
+/**
+ * The plain system background. A verdict washes the top of it in red, orange, blue or green, so
+ * colour on screen always means something.
+ */
 @Composable
 fun GlassBackdrop(tint: Color? = null, modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     val p = P
-    val t = rememberInfiniteTransition(label = "blobs")
-    val phase by t.animateFloat(0f, 1f, infiniteRepeatable(tween(18000, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "phase")
     val wash by animateColorAsState(tint ?: Color.Transparent, tween(700), label = "wash")
-    Box(modifier.fillMaxSize().background(p.bg)) {
-        Canvas(Modifier.fillMaxSize()) {
-            val w = size.width; val h = size.height
-            val tilt = Tilt.value
-            val par = Offset(tilt.x * 28.dp.toPx(), tilt.y * 28.dp.toPx())
-            val spots = listOf(
-                Offset(w * (0.15f + 0.2f * phase), h * 0.12f), Offset(w * (0.95f - 0.15f * phase), h * 0.32f),
-                Offset(w * 0.2f, h * (0.62f + 0.1f * phase)), Offset(w * (0.8f + 0.1f * phase), h * 0.88f),
-            )
-            spots.forEachIndexed { i, c0 ->
-                val c = c0 + par * (if (i % 2 == 0) 1f else -0.6f)
-                val r = w * (0.75f + 0.1f * (i % 2))
-                drawCircle(Brush.radialGradient(listOf(p.blobs[i].copy(alpha = if (p.dark) 0.55f else 0.7f), Color.Transparent), c, r), r, c)
-            }
-            if (wash.alpha > 0f) {
-                drawRect(Brush.verticalGradient(listOf(wash.copy(alpha = wash.alpha * if (p.dark) 0.35f else 0.25f), Color.Transparent), endY = h * 0.6f))
-            }
-        }
-        content()
-    }
+    Box(modifier.fillMaxSize().background(p.bg).drawBehind {
+        if (wash.alpha > 0f) drawRect(Brush.verticalGradient(
+            listOf(wash.copy(alpha = wash.alpha * if (p.dark) 0.28f else 0.16f), Color.Transparent), endY = size.height * 0.55f))
+    }) { content() }
 }
 
 /** Frosted glass for the bars: what scrolls underneath is blurred for real. */
 fun barStyle(p: Palette) = HazeStyle(
     backgroundColor = p.bg,
-    tint = HazeTint(if (p.dark) Color(0xFF1C1E26).copy(alpha = 0.55f) else Color.White.copy(alpha = 0.6f)),
+    tint = HazeTint(if (p.dark) Color(0xFF161618).copy(alpha = 0.72f) else Color(0xFFF9F9F9).copy(alpha = 0.78f)),
     blurRadius = 26.dp,
     noiseFactor = 0.05f,
 )
@@ -197,7 +173,7 @@ fun Modifier.glass(
     p: Palette, shape: Shape = RoundedCornerShape(28.dp), strong: Boolean = false, elevation: Dp = 18.dp,
     tint: Color? = null, haze: HazeState? = null,
 ): Modifier = this
-    .outerShadow(shape, elevation, Color.Black.copy(alpha = if (p.dark) 0.45f else 0.10f))
+    .outerShadow(shape, if (p.dark) 0.dp else elevation * 0.5f, Color.Black.copy(alpha = 0.06f))
     .clip(shape)
     .then(if (haze != null) Modifier.hazeEffect(haze, barStyle(p)) else Modifier.background(if (strong) p.glassStrong else p.glass))
     .then(if (tint != null) Modifier.background(tint.copy(alpha = if (p.dark) 0.16f else 0.10f)) else Modifier)
@@ -208,7 +184,7 @@ fun Modifier.glass(
             val tl = Tilt.value
             val w = size.width; val h = size.height
             drawRect(Brush.linearGradient(
-                listOf(Color.White.copy(alpha = if (p.dark) 0.07f else 0.30f), Color.Transparent),
+                listOf(Color.White.copy(alpha = if (p.dark) 0.04f else 0f), Color.Transparent),
                 start = Offset(w * (0.1f - tl.x * 0.4f), -h * 0.1f), end = Offset(w * (0.45f - tl.x * 0.4f), h * (0.75f + tl.y * 0.2f)),
             ))
             drawContent()
@@ -339,7 +315,9 @@ fun GlassTabBar(items: List<Pair<ImageVector, String>>, selected: Int, haze: Haz
 fun Segmented(options: List<Pair<String, String>>, selected: String, modifier: Modifier = Modifier, onSelect: (String) -> Unit) {
     val p = P
     val view = LocalView.current
-    BoxWithConstraints(modifier.fillMaxWidth().glass(p, RoundedCornerShape(20.dp), elevation = 6.dp).padding(4.dp)) {
+    // iOS segmented control: a grey track (tertiary fill) with a raised thumb.
+    BoxWithConstraints(modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp))
+        .background(if (p.dark) Color(0xFF767680).copy(alpha = 0.24f) else Color(0xFF767680).copy(alpha = 0.12f)).padding(4.dp)) {
         val w = maxWidth / options.size
         val idx = options.indexOfFirst { it.first == selected }.coerceAtLeast(0)
         val x by animateDpAsState(w * idx, Springs.bouncy(), label = "seg")

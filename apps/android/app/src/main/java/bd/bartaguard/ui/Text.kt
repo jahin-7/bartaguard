@@ -7,6 +7,8 @@ import kotlin.math.roundToInt
 /** In-app language switch (not the system locale). Bangla first; the app is for Bangla speakers. */
 class Strings(val bn: Boolean) {
     fun t(en: String, bnText: String) = if (bn) bnText else en
+    /** Bangla digits in Bangla, so "২টির মধ্যে ১টি" doesn't mix scripts. */
+    fun num(n: Int) = if (bn) n.toString().map { if (it.isDigit()) '০' + (it - '0') else it }.joinToString("") else n.toString()
     fun n(x: Int) = if (bn) x.toString().map { if (it in '0'..'9') "০১২৩৪৫৬৭৮৯"[it - '0'] else it }.joinToString("") else x.toString()
     fun pct(x: Double) = n((x * 100).roundToInt()) + "%"
 

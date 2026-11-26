@@ -29,6 +29,7 @@ final class AppModel {
     }
     var scheme: ColorScheme? { appearance == "dark" ? .dark : appearance == "light" ? .light : nil }
     var tab = 0
+    var showFilterSetup = false
     var input = ""
     var checked: (text: String, analysis: Analysis)?
     var linkInput = ""
@@ -86,6 +87,7 @@ struct RootView: View {
                 }
             }
         }
+        .sheet(isPresented: $m.showFilterSetup) { FilterSetupSheet().environment(m).preferredColorScheme(m.scheme) }
         .preferredColorScheme(m.scheme)
         .animation(.easeInOut(duration: 0.4), value: m.appearance)
     }

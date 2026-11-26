@@ -1,6 +1,11 @@
 package bd.bartaguard.ui.screens
 
 import android.Manifest
+import bd.bartaguard.ui.outerShadow
+import bd.bartaguard.R
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
@@ -164,10 +169,12 @@ fun LanguageScreen(choose: (String) -> Unit) {
             Modifier.graphicsLayer {
                 scaleX = pop.value; scaleY = pop.value; alpha = ((pop.value - 0.4f) / 0.6f).coerceIn(0f, 1f)
                 translationY = float * 4.dp.toPx()
-            }.size(96.dp).glass(P, CircleShape, strong = true),
+            }.size(104.dp).outerShadow(RoundedCornerShape(26.dp), 18.dp, Color.Black.copy(alpha = 0.25f)).clip(RoundedCornerShape(26.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(Icons.Filled.VerifiedUser, null, tint = P.accent, modifier = Modifier.size(48.dp))
+            // The app icon itself: the adaptive layers, foreground enlarged past its safe-zone inset.
+            Image(painterResource(R.drawable.ic_launcher_background), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+            Image(painterResource(R.drawable.ic_launcher_foreground), null, Modifier.fillMaxSize().graphicsLayer { scaleX = 1.55f; scaleY = 1.55f })
         }
         Spacer(Modifier.height(24.dp))
         Text("BartaGuard", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = P.text, modifier = Modifier.appear(1))
@@ -371,14 +378,14 @@ private fun Tip(icon: ImageVector, title: String, body: String, modifier: Modifi
 
 @Composable
 private fun WatchTip(vm: AppViewModel, s: Strings, modifier: Modifier = Modifier) {
-    val on = vm.watch && vm.access
+    val on = vm.watching
     Tip(
         Icons.Outlined.NotificationsActive,
         if (on) s.t("Auto-check is on", "অটো-যাচাই চালু") else s.t("Check new messages automatically", "নতুন মেসেজ নিজে থেকেই যাচাই করুন"),
         if (on) s.t("You'll get a warning if a message looks like a scam.", "কোনো মেসেজ প্রতারণা মনে হলে সতর্কবার্তা পাবেন।")
-        else s.t("Turn on in Settings. Runs on your phone only.", "সেটিংসে চালু করুন। শুধু আপনার ফোনেই চলে।"),
+        else s.t("Tap to set up. Runs on your phone only.", "সেটআপ করতে চাপুন। শুধু আপনার ফোনেই চলে।"),
         modifier, tint = if (on) P.ok else P.accent,
-    ) { vm.tab = 3 }
+    ) { if (on) vm.tab = 3 else { vm.setWatching(true); vm.setupOpen = true } }
 }
 
 // endregion
@@ -490,29 +497,13 @@ fun SettingsScreen(vm: AppViewModel, s: Strings, scroll: ScrollState) {
             ToggleRow(s.t("Auto-check new messages", "নতুন মেসেজ অটো-যাচাই"),
                 s.t("Reads new SMS, WhatsApp, Messenger, Telegram and imo notifications on this phone and warns you about likely scams. Nothing is sent anywhere.",
                     "এই ফোনে নতুন SMS, হোয়াটসঅ্যাপ, মেসেঞ্জার, টেলিগ্রাম ও imo নোটিফিকেশন পড়ে সম্ভাব্য প্রতারণা নিয়ে সতর্ক করে। কিছুই কোথাও পাঠানো হয় না।"),
-                vm.watch && vm.access) { on ->
-                if (on) {
-                    vm.setWatching(true)
-                    if (Build.VERSION.SDK_INT >= 33) notifPerm.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    WatchService.ensureChannel(ctx, s.bn)
-                    if (!vm.access) openListenerSettings(ctx)
-                } else vm.setWatching(false)
+                vm.watching) { on ->
+                vm.setWatching(on)
+                if (on && !vm.watching) vm.setupOpen = true
             }
-            AnimatedVisibility(vm.watch && !vm.access, enter = expandVertically(Springs.smooth()) + fadeIn(), exit = shrinkVertically(Springs.smooth()) + fadeOut()) {
-                Column(Modifier.padding(top = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(s.t("Allow BartaGuard under Notification access, then come back.", "নোটিফিকেশন অ্যাক্সেসে BartaGuard-কে অনুমতি দিন, তারপর ফিরে আসুন।"),
-                        color = P.warn, fontSize = 13.sp)
-                    // Android 13+ greys out notification access for apps installed outside Play until
-                    // "Allow restricted settings" is chosen on the app's info page.
-                    if (Build.VERSION.SDK_INT >= 33) Text(
-                        s.t("Switch greyed out? Tap here → ⋮ → Allow restricted settings, then try again.",
-                            "সুইচ ধূসর? এখানে চাপুন → ⋮ → Allow restricted settings, তারপর আবার চেষ্টা করুন।"),
-                        color = P.accent, fontSize = 13.sp,
-                        modifier = Modifier.pressable {
-                            ctx.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.fromParts("package", ctx.packageName, null)))
-                        },
-                    )
-                }
+            AnimatedVisibility(vm.watch && !vm.watching, enter = expandVertically(Springs.smooth()) + fadeIn(), exit = shrinkVertically(Springs.smooth()) + fadeOut()) {
+                Text(s.t("Finish setup to get warnings →", "সতর্কবার্তা পেতে সেটআপ শেষ করুন →"), color = P.accent, fontSize = 14.sp, fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(top = 12.dp).pressable { vm.setupOpen = true })
             }
         }
 
@@ -561,15 +552,3 @@ private fun ToggleRow(title: String, sub: String, on: Boolean, set: (Boolean) ->
 }
 
 // endregion
-
-/** Android 11+ can jump straight to BartaGuard's own switch; older versions get the full list. */
-private fun openListenerSettings(ctx: Context) {
-    val direct = Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS)
-        .putExtra(Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME,
-            android.content.ComponentName(ctx, bd.bartaguard.WatchService::class.java).flattenToString())
-    try {
-        ctx.startActivity(if (Build.VERSION.SDK_INT >= 30) direct else Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-    } catch (e: android.content.ActivityNotFoundException) {
-        ctx.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-    }
-}

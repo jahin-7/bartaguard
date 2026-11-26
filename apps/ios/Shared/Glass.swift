@@ -1,8 +1,8 @@
 import BartaGuardCore
 import SwiftUI
 
-// Liquid Glass on iOS 26 (the real .glassEffect material), frosted .ultraThinMaterial before that,
-// so the same screens work back to iOS 17.
+// Apple's grouped look: system grey background, solid cards, and Liquid Glass (iOS 26) only where
+// iOS itself uses it, on buttons and bars. Works back to iOS 17.
 
 extension Verdict {
     var color: Color {
@@ -24,18 +24,14 @@ extension Verdict {
 }
 
 struct GlassCard: ViewModifier {
-    var radius: CGFloat = 28
+    var radius: CGFloat = 26
     var tint: Color? = nil
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content.glassEffect(tint.map { .regular.tint($0.opacity(0.18)) } ?? .regular, in: .rect(cornerRadius: radius))
-        } else {
-            content
-                .background(.ultraThinMaterial, in: .rect(cornerRadius: radius))
-                .overlay(RoundedRectangle(cornerRadius: radius).strokeBorder(
-                    LinearGradient(colors: [.white.opacity(0.7), .white.opacity(0.1)], startPoint: .top, endPoint: .bottom), lineWidth: 1))
-                .shadow(color: .black.opacity(0.08), radius: 16, y: 8)
-        }
+        content
+            .background {
+                RoundedRectangle(cornerRadius: radius, style: .continuous).fill(Color(.secondarySystemGroupedBackground))
+                    .overlay { if let tint { RoundedRectangle(cornerRadius: radius, style: .continuous).fill(tint.opacity(0.10)) } }
+            }
     }
 }
 
@@ -51,34 +47,21 @@ extension View {
     }
 }
 
-/// Slow colour field behind the glass, washed with the verdict colour after a check.
+/// The plain system background. A verdict washes the top of it, so colour always means something.
 struct Backdrop: View {
     var tint: Color?
     @Environment(\.colorScheme) private var scheme
-    @State private var phase = false
 
     var body: some View {
-        let dark = scheme == .dark
-        let blobs: [Color] = dark ? [Color(red: 0.12, green: 0.30, blue: 0.72), Color(red: 0.48, green: 0.18, blue: 0.42), Color(red: 0.06, green: 0.43, blue: 0.36), Color(red: 0.29, green: 0.18, blue: 0.66)]
-                                  : [Color(red: 0.62, green: 0.77, blue: 1.0), Color(red: 1.0, green: 0.78, blue: 0.66), Color(red: 0.73, green: 0.95, blue: 0.85), Color(red: 0.85, green: 0.77, blue: 1.0)]
-        GeometryReader { g in
-            let w = g.size.width, h = g.size.height
-            ZStack {
-                (dark ? Color(red: 0.03, green: 0.035, blue: 0.06) : Color(red: 0.94, green: 0.95, blue: 0.97))
-                ForEach(0..<4, id: \.self) { i in
-                    let spots = [CGPoint(x: w * (phase ? 0.35 : 0.15), y: h * 0.12), CGPoint(x: w * (phase ? 0.8 : 0.95), y: h * 0.32),
-                                 CGPoint(x: w * 0.2, y: h * (phase ? 0.72 : 0.62)), CGPoint(x: w * (phase ? 0.9 : 0.8), y: h * 0.88)]
-                    Circle().fill(RadialGradient(colors: [blobs[i].opacity(dark ? 0.55 : 0.7), .clear], center: .center, startRadius: 0, endRadius: w * 0.8))
-                        .frame(width: w * 1.6, height: w * 1.6).position(spots[i])
-                }
-                if let tint {
-                    LinearGradient(colors: [tint.opacity(dark ? 0.35 : 0.25), .clear], startPoint: .top, endPoint: .center)
-                }
+        ZStack {
+            Color(.systemGroupedBackground)
+            if let tint {
+                LinearGradient(colors: [tint.opacity(scheme == .dark ? 0.28 : 0.16), .clear], startPoint: .top, endPoint: .center)
+                    .transition(.opacity)
             }
         }
         .ignoresSafeArea()
         .animation(.easeInOut(duration: 0.6), value: tint)
-        .onAppear { withAnimation(.easeInOut(duration: 18).repeatForever(autoreverses: true)) { phase = true } }
     }
 }
 

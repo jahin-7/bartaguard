@@ -1,6 +1,9 @@
 package bd.bartaguard
 
 import android.app.Application
+import android.os.Build
+import android.os.PowerManager
+import androidx.core.app.NotificationManagerCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,6 +32,16 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var link by mutableStateOf<UrlInfo?>(null); private set
     var watch by mutableStateOf(prefs.watch); private set
     var access by mutableStateOf(false); private set
+    var alertsOk by mutableStateOf(true); private set
+    var batteryOk by mutableStateOf(true); private set
+    var setupOpen by mutableStateOf(false)
+    /** Phone makers whose battery savers kill background services unless told not to. */
+    val needsBattery = Build.MANUFACTURER.lowercase() in setOf(
+        "xiaomi", "redmi", "poco", "oppo", "realme", "vivo", "iqoo", "oneplus", "samsung", "huawei", "honor",
+        "tecno", "infinix", "itel", "motorola", "nokia", "hmd global", "symphony", "walton",
+    )
+    /** Every step the warning needs: notification access, permission to alert, and (on some phones) battery. */
+    val watching get() = watch && access && alertsOk && (batteryOk || !needsBattery)
     var keepHistory by mutableStateOf(prefs.keepHistory); private set
     var history by mutableStateOf(prefs.history()); private set
 
@@ -72,7 +85,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun refreshAccess() {
-        access = WatchService.hasAccess(getApplication())
+        val app = getApplication<Application>()
+        access = WatchService.hasAccess(app)
+        alertsOk = NotificationManagerCompat.from(app).areNotificationsEnabled()
+        batteryOk = app.getSystemService(PowerManager::class.java).isIgnoringBatteryOptimizations(app.packageName)
         history = prefs.history()
     }
 
